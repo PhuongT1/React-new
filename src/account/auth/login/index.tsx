@@ -6,7 +6,7 @@ import http from '../../../services/axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
+import Input from '../../../elements/Input/index'
 const Login = (props: any) => {
     const navigate = useNavigate();
     const schema = yup.object().shape({
@@ -31,6 +31,7 @@ const Login = (props: any) => {
     
     const {
         register,
+        control,
         handleSubmit,
         formState: { errors },
         setValue
@@ -59,13 +60,14 @@ const Login = (props: any) => {
             <form onSubmit={handleSubmit(handleSubmitForm)}>
                 <div className={`${styleLogin['layer-content']}`}>
                     <div className={`${styleLogin['row-item']}`}>
-                        <TextField  color="warning" error={errors.email ? true : false} 
+                        {/* <TextField  color="warning" error={errors.email ? true : false} 
                             helperText={`${errors.email?.message ? errors.email?.message : ''}`}
                             {...register("email")} onChange={(e) => {
                                 setValue("password", e.target.value)
                                 console.log('e', e)}
                             } name="email" className={`${styleLogin['w-100']}`} 
-                            label="아이디를 입력해주세요. *" variant="outlined" />
+                            label="아이디를 입력해주세요. *" variant="outlined" /> */}
+                        <Input register={register} name='email' control={control}/>    
                     </div>
                     <div className={styleLogin['row-item']}>
                         <TextField error={errors.password ? true : false}
