@@ -1,0 +1,230 @@
+@import '../../assets/scss/variables.scss';
+@import '../../assets/scss/mixins.scss';
+@import 'sass-rem';
+
+.home-wrapper {
+  position: relative;
+  .wrapper-content {
+    @include rem(
+      (
+        padding: 54px 120px 80px 120px
+      )
+    );
+    .divider {
+      display: none;
+      background: $grey-f5;
+      width: 100%;
+      @include rem(
+        (
+          height: 8px
+        )
+      );
+    }
+    .interior-by-theme {
+      .list-theme {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: rem(17px);
+      }
+      .header-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: rem(24px);
+        position: relative;
+        p {
+          @extend .main-title;
+          &:nth-child(2) {
+            @include viewMoreTitle;
+            position: absolute;
+            right: 0;
+          }
+        }
+      }
+    }
+    .portfolio {
+      @extend .interior-by-theme;
+      margin-top: rem(88px);
+      .list-portfolio {
+        display: grid;
+        @include rem(
+          (
+            gap: rem(15px),
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr))
+          )
+        );
+
+        grid-auto-flow: row;
+      }
+    }
+    .news {
+      @extend .portfolio;
+      margin-top: rem(80px);
+      .list-portfolio {
+        @include rem(
+          (
+            grid-template-columns: repeat(auto-fit, minmax(345px, 1fr)),
+            column-gap: 76px,
+            row-gap: 32px
+          )
+        );
+      }
+      .header-title {
+        margin-bottom: rem(40px);
+      }
+    }
+    .banner {
+      @include rem(
+        (
+          margin: 72px 0 80px 0
+        )
+      );
+      img {
+        width: 100%;
+        object-fit: fill;
+        min-height: rem(80px);
+      }
+    }
+  }
+  .right-button {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    right: 0;
+    top: 12%;
+    .box-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: $white-basic;
+      p {
+        @include titleBlack;
+        @include rem(
+          (
+            font-size: 8px,
+            line-height: 10px
+          )
+        );
+      }
+      @include rem(
+        (
+          gap: 4px,
+          height: 80px,
+          width: 80px,
+          border: 1px solid $grey-e7
+        )
+      );
+    }
+  }
+}
+
+.main-title {
+  @include mainTitle;
+}
+
+@include customMaxBreakPoint(576) {
+  .home-wrapper {
+    .right-button {
+      top: 103%;
+      @include rem(
+        (
+          gap: 16px,
+          right: 8px
+        )
+      );
+      .box-button {
+        @include rem(
+          (
+            width: 48px,
+            height: 48px,
+            border-radius: 90px
+          )
+        );
+        &:first-child {
+          background: $blue-900;
+        }
+        &:nth-child(2) {
+          background: $blue-bold;
+        }
+        p {
+          color: $white-basic;
+        }
+      }
+    }
+    .wrapper-content {
+      @include rem(
+        (
+          padding: 40px 0 44px 0
+        )
+      );
+      .divider {
+        display: block;
+      }
+      .interior-by-theme,
+      .portfolio {
+        overflow-x: hidden;
+        @include rem(
+          (
+            padding-left: 16px
+          )
+        );
+        .header-title {
+          justify-content: unset;
+        }
+      }
+      .interior-by-theme {
+        padding-right: 0;
+        margin-bottom: rem(26px);
+        .list-theme {
+          overflow-x: scroll;
+          & > * {
+            width: rem(226px);
+          }
+        }
+        .header-title {
+          p {
+            &:nth-child(2) {
+              right: rem(16px);
+            }
+          }
+        }
+      }
+      .portfolio {
+        @include rem(
+          (
+            margin-top: 16px,
+            padding-right: 16px
+          )
+        );
+
+        .list-portfolio {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .header-title {
+          p {
+            &:nth-child(2) {
+              right: 0;
+            }
+          }
+        }
+      }
+      .banner {
+        margin: 0;
+      }
+      .news {
+        .list-portfolio {
+          & > * {
+            padding-right: rem(16px);
+          }
+          @include rem(
+            (
+              grid-template-columns: repeat(auto-fit, minmax(345px, 1fr))
+            )
+          );
+        }
+      }
+    }
+  }
+}
