@@ -5,7 +5,7 @@ import Login from '../account/auth/login'
 const Routes = () => {
   const routes = useRoutes([
     {
-      path: '/phuong-tran',
+      path: '/home',
       element: <Home />
     },
     {

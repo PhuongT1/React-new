@@ -8,6 +8,7 @@ const instance = axios.create({
   }
 })
 
+// Add a request interceptor
 instance.interceptors.request.use(
   config => {
     const token = TokenService.getLocalAccessToken()
@@ -23,7 +24,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   res => {
-    return res
+    return res.data
   },
   async (err) => {
     const originalConfig = err.config

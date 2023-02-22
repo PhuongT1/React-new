@@ -1,25 +1,26 @@
 import React from 'react'
-import { FormControl, InputLabel, OutlinedInput } from '@mui/material'
+import { FormControl, InputLabel, Input, FilledInput, FormHelperText } from '@mui/material'
 import { Controller } from 'react-hook-form'
 import styles from './input.module.scss'
 const phoneNumberReplaceRegex = /[(a-zA-Z)(?=.*!@#$%^&*()+_/;:"'/?>.,<[{}\])]/g
-const Input: React.FC<any> = ({
+const Inputs: React.FC<any> = ({
     label,
     name,
     control,
     startAdornment,
     endAdornment,
     type,
-    height = 46,
+    height = '',
     width = '100%',
     inputProps,
     customStyle = '',
     onKeyDown,
     placeholder,
     containerStyle = '',
-    radius = 4,
+    radius = '',
     disabled,
-    register
+    register,
+    helperText
 }) => {
     return (
         <Controller
@@ -27,6 +28,8 @@ const Input: React.FC<any> = ({
             control={control}
             render={({ field: { onChange, value }, fieldState: { invalid, isTouched, isDirty, error } }) => (
                 <FormControl
+                    error={invalid}
+                    variant="filled"
                     className={`${styles.form_control} ${containerStyle}`}
                     sx={{
                         width: width
@@ -36,8 +39,9 @@ const Input: React.FC<any> = ({
                         <InputLabel htmlFor={name} className={styles.input_label}>
                         {label}
                         </InputLabel>
-                    )}    
-                    <OutlinedInput
+                    )}
+                    
+                    <FilledInput
                         disabled={disabled}
                         id={name}
                         value={typeof value === 'object' ? value?.name : value}
@@ -62,11 +66,17 @@ const Input: React.FC<any> = ({
                         onKeyDown={e => {
                         if (onKeyDown) onKeyDown(e)
                         }}
-                    /> 
+                    />
+                    {!!helperText && (<FormHelperText id={name}>
+                        {helperText}
+                        </FormHelperText>)
+                    }
+                    
                 </FormControl>
+
             )}
         />
     )
 }
 
-export default Input
+export default Inputs
