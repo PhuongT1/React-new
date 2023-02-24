@@ -71,13 +71,15 @@ const MemberManage = (props: any) => {
         console.log('data', data);
     }
 
+    const callbackFunction = (childData: any) => {
+       console.log(childData)
+    }
+
     return (
         <div className={styleLogin['layer-item']}>
-            <form onSubmit={handleSubmit(handleSubmitForm)}>
-                <div className={`${styleLogin['layer-content']}`}>
-                    <SearchItem />
-                </div>
-            </form>
+            <div className={`${styleLogin['layer-content']}`}>
+                    <SearchItem parentCallback= {callbackFunction}/>
+            </div>
         </div>
     )
 }
