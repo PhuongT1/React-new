@@ -2,7 +2,7 @@ import axios from 'axios'
 import TokenService from './token.service'
 
 const instance = axios.create({
-  baseURL: `https://api-hideme.brickmate.kr/api`,
+  baseURL: `https://api.hidemeplease.xyz/api`,
   headers: {
     'Content-Type': 'application/json'
   }

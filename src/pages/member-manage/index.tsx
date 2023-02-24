@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import styleLogin from './login.module.scss';
+import styleLogin from './member-manage.module.scss';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import http from '../../services/axios';
@@ -9,6 +9,8 @@ import * as yup from "yup";
 import Inputs from '../../elements/Input/index'
 import { connect } from 'react-redux';
 import { useEffect, useState } from 'react';
+import SearchItem from '../../elements/search'
+
 const MemberManage = (props: any) => {
     const navigate = useNavigate();
     const schema = yup.object().shape({
@@ -69,13 +71,15 @@ const MemberManage = (props: any) => {
         console.log('data', data);
     }
 
+    const callbackFunction = (childData: any) => {
+       console.log(childData)
+    }
+
     return (
         <div className={styleLogin['layer-item']}>
-            <form onSubmit={handleSubmit(handleSubmitForm)}>
-                <div className={`${styleLogin['layer-content']}`}>
-                    Member Manage
-                </div>
-            </form>
+            <div className={`${styleLogin['layer-content']}`}>
+                    <SearchItem parentCallback= {callbackFunction}/>
+            </div>
         </div>
     )
 }

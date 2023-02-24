@@ -1,0 +1,20 @@
+.layer-item {
+    border: 1px solid #D7D7D7;
+    border-radius: 5px;
+    padding: 20px 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
+    form {
+        display: flex;
+    }
+    .label-item {
+        margin: 20px 15px auto 15px;
+    }
+    .btn-search {
+        margin-left: 15px;
+        button { padding-top: 10px; padding-bottom: 10px;}
+    }
+}
