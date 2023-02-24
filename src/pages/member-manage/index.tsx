@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import styleLogin from './login.module.scss';
+import styleLogin from './member-manage.module.scss';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import http from '../../services/axios';
