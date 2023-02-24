@@ -9,6 +9,8 @@ import * as yup from "yup";
 import Inputs from '../../elements/Input/index'
 import { connect } from 'react-redux';
 import { useEffect, useState } from 'react';
+import SearchItem from '../../elements/search'
+
 const MemberManage = (props: any) => {
     const navigate = useNavigate();
     const schema = yup.object().shape({
@@ -73,7 +75,7 @@ const MemberManage = (props: any) => {
         <div className={styleLogin['layer-item']}>
             <form onSubmit={handleSubmit(handleSubmitForm)}>
                 <div className={`${styleLogin['layer-content']}`}>
-                    Member Manage
+                    <SearchItem />
                 </div>
             </form>
         </div>
