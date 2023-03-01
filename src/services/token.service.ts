@@ -8,7 +8,7 @@ const getLocalRefreshToken = () => {
 const getLocalAccessToken = () => {
   if (typeof window !== 'undefined') {
     const user = JSON.parse(localStorage.getItem('user') as any)
-    return user?.accessToken
+    return user?.access_token
   }
 }
 

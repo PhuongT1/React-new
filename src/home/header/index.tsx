@@ -26,8 +26,11 @@ const Header = (props: any) => {
     }
     return (
         <div className={styleLogin['header-item']}>
-            <div className={styleLogin['logo']}></div>
+            <div className={styleLogin['logo']}>
+                <img src='https://s1.vnecdn.net/vnexpress/restruct/i/v742/v2_2019/pc/graphics/logo.svg' />
+            </div>
             <div className={styleLogin['right-content']}>
+                Admin
                 <IconButton
                     id="basic-button"
                     aria-controls={open ? 'basic-menu' : undefined}

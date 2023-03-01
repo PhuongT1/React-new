@@ -1,9 +1,9 @@
 import React from 'react'
-import { FormControl, InputLabel, Input, FilledInput, FormHelperText, IconButton } from '@mui/material'
+import { FormControl, InputLabel, Input, FilledInput, FormHelperText } from '@mui/material'
 import { Controller } from 'react-hook-form'
 import styles from './input.module.scss'
-import InputAdornment from '@mui/material/InputAdornment';
-const phoneNumberReplaceRegex = /[(a-zA-Z)(?=.*!@#$%^&*()+_/;:"'/?>.,<[{}\])]/g
+// const phoneNumberReplaceRegex = /[(a-zA-Z)(?=.*!@#$%^&*()+_/;:"'/?>.,<[{}\])]/g
+
 const Inputs: React.FC<any> = ({
     label,
     name,
@@ -12,7 +12,7 @@ const Inputs: React.FC<any> = ({
     endAdornment,
     type,
     height = '',
-    width = '100%',
+    width = 'auto',
     inputProps,
     customStyle = '',
     onKeyDown,
@@ -22,7 +22,8 @@ const Inputs: React.FC<any> = ({
     disabled,
     register,
     helperText,
-    inputRef
+    inputRef,
+    size= 'small'
 }) => {
     return (
         <Controller
@@ -30,6 +31,7 @@ const Inputs: React.FC<any> = ({
             control={control}
             render={({ field: { onChange, value }, fieldState: { invalid, isTouched, isDirty, error } }) => (
                 <FormControl
+                    size={size}
                     error={invalid}
                     variant="filled"
                     className={`${styles.form_control} ${containerStyle}`}
@@ -42,7 +44,6 @@ const Inputs: React.FC<any> = ({
                         {label}
                         </InputLabel>
                     )}
-                    
                     <FilledInput
                         inputRef={inputRef}
                         disabled={disabled}
@@ -76,7 +77,6 @@ const Inputs: React.FC<any> = ({
                     }
                     
                 </FormControl>
-
             )}
         />
     )

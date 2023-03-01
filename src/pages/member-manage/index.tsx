@@ -1,92 +1,89 @@
-import { useNavigate } from 'react-router-dom';
+
 import styleLogin from './member-manage.module.scss';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import http from '../../services/axios';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import Inputs from '../../elements/Input/index'
-import { connect } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SearchItem from '../../elements/search'
+import TableData from '../../elements/table'
+import Button from '@mui/material/Button';
+import Loading from '../../elements/loading';
+import { MenuItem } from '@mui/material';
 
-const MemberManage = (props: any) => {
-    const navigate = useNavigate();
-    const schema = yup.object().shape({
-        email: yup
-            .string()
-            .email("Vui lòng nhập đúng định dạng email.")
-            .required("Vui lòng nhập email."),
-        password: yup
-            .string()
-            .required("Vui lòng nhập password.")
-            .matches(
-                /^(?=\D*\d)(?=[^a-z]*[a-z])(?=.*[$@$!%*?&])(?=[^A-Z]*[A-Z]).{8,30}$/,
-                "Vui lòng nhập đúng định dạng password."
-            ),
-    });
-
-    const form = useForm({
-        defaultValues: { email: 'admin2@test.com', password: 'Abcd1234@' },
-        mode: "onTouched",
-        resolver: yupResolver(schema),
-    });
-    
-    const {
-        register,
-        control,
-        handleSubmit,
-        formState: { errors },
-        setError,
-        getValues
-    } = form;
-
-    const token = (dataToken?: any) => {
-        return {
-            type: "saveToken",
-            data: dataToken
-        };
+const MemberManages = () => {
+    const [listMember, setlistMember] = useState<any>([])
+    const [showLoading, setshowLoading] = useState<boolean>(true)
+    const [optionSearch, setoptionSearch] = useState<any>([
+        { value1: 'search_like', label1: 'Search Like' }, 
+        { value1: 'name_like', label1: 'Name Like' }
+    ])
+    const paramUrl = {
+        per_page: 15,
+        page: 1,
+        order_by: `id desc`
     }
-    const [dataToken, setdataToken] = useState<any>({})
 
-    useEffect(() => {})
+    useEffect(() => {
+        const data = optionSearch.map((ele: any) => {
+            return { value: ele.value1, label: ele.label1 }
+        })
+        setoptionSearch(data)
+        fetchData(paramUrl)
+    }, [])
 
-    const fetchData = async (data:any) => {
+    
+
+    const fetchData = async (param: {}) => {
         try {
-            const response = await http.post(`/login`, data)
-            setdataToken(response)
-            props.dispatch(token(response))
-            navigate('/home')
+            const response = await http.get(`/admin/users`, { params: param })
+            setlistMember(response.data)
+            setshowLoading(false);
+
         } catch (error: any) {
-            setError(error.error_field, {'message': error?.message})
+            setshowLoading(false);
+            console.log('Error', error);
         }
     }
 
-    const handleSubmitForm = (data: any) => {
-        fetchData(data);
+    const rowTable = (item?: any, index?: number): JSX.Element => {
+        return (
+            <>
+                <td>{item.id}</td>
+                <td>{item.provider}</td>
+                <td>{item.name}</td>
+                <td>{item?.created_at}</td>
+                <td>{item.status === 1 ? '활동' : '휴면' }</td>
+                <td>
+                    <Button style={{background: "#3f51b5"}} variant="contained">조회</Button>
+                </td>
+            </>
+        )
     }
 
-    const changeData = (data: any) => {
-        console.log('data', data);
+    const searchData = (data: any) => {
+        let dataSearch = {
+            created_at_btw: `${data.startDay?.format('DD-MM-YYYY')}, ${data.endDay?.format('DD-MM-YYYY')} 23:59:59`
+        }
+        fetchData({...paramUrl, ...dataSearch})
     }
 
-    const callbackFunction = (childData: any) => {
-       console.log(childData)
-    }
+    const dataheader: any[] = ['STT', 'Subscription path', 'Name', 'Date Create', 'Status', 'More information']
 
     return (
         <div className={styleLogin['layer-item']}>
             <div className={`${styleLogin['layer-content']}`}>
-                    <SearchItem parentCallback= {callbackFunction}/>
+                <SearchItem optionSelect={optionSearch} emitDataSearch= {searchData}/>
+                <div className={`${styleLogin['layer-table']}`}>
+                    { showLoading && (<Loading />) }
+                    <TableData dataheader={dataheader} rowItem={rowTable} data={listMember}/>
+                </div>
             </div>
         </div>
     )
 }
 
-const mapStateToProps = (state: any) => { 
-    return {  
-        state: state,
-    }; 
-};
-export default connect(mapStateToProps)(MemberManage);
+// const mapStateToProps = (state: any) => { 
+//     return {  
+//         state: state,
+//     }; 
+// };
+// export default connect(mapStateToProps)(MemberManages);
+export default MemberManages;

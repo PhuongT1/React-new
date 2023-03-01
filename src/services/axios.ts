@@ -2,12 +2,11 @@ import axios from 'axios'
 import TokenService from './token.service'
 
 const instance = axios.create({
-  baseURL: `https://api.hidemeplease.xyz/api`,
+  baseURL: `https://api-hideme.brickmate.kr/api`,
   headers: {
     'Content-Type': 'application/json'
   }
 })
-
 // Add a request interceptor
 instance.interceptors.request.use(
   config => {
@@ -47,7 +46,7 @@ instance.interceptors.response.use(
           return instance(originalConfig)
         } catch (_error) {
           TokenService.removeAuth()
-          window.location.href = '/login'
+          // window.location.href = '/login'
           return Promise.reject(_error)
         }
       }

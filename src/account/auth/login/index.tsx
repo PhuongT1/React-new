@@ -80,10 +80,10 @@ const Login = (props: any) => {
                 <div className={`${styleLogin['layer-content']}`}>
                     <div className={`${styleLogin['row-item']}`}>
                         {showLoading && (<Loading />)}
-                        <Inputs label="Email" helperText={errors.email?.message} register={register} name='email' control={control}/>    
+                        <Inputs width={'100%'} label="Email" helperText={errors.email?.message} register={register} name='email' control={control}/>    
                     </div>
                     <div className={styleLogin['row-item']}>
-                        <TextField error={errors.password ? true : false}
+                        <TextField size={'small'} error={errors.password ? true : false}
                             helperText={`${errors.password?.message ? errors.password?.message : ''}`}
                             {...register("password")} className={`${styleLogin['w-100']}`}
                             variant="filled"
@@ -91,7 +91,6 @@ const Login = (props: any) => {
                             label="비밀번호를 입력해주세요. *" />
                     </div>
                     <div>
-                    {/* <Button variant="contained" onClick={() => changeData(getValues())}>Log Data</Button> */}
                     </div>
                     <div className={`${styleLogin['row-item']} ${styleLogin['btn-login']}`}>
                         <Button type="submit" variant="contained">로그인</Button>

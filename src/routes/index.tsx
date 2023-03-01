@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRoutes } from 'react-router-dom'
+import { Navigate, useRoutes } from 'react-router-dom'
 import Home from '../home'
 import Login from '../account/auth/login'
 import RequireAuth from './requireAuth'
@@ -12,7 +12,7 @@ const Routes = () => {
     },
     {
       path: '/',
-      element: <Home />,
+      element: <Navigate to="/admin/member-manage" replace  />
     },
     {
       path: 'login',
