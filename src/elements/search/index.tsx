@@ -8,32 +8,36 @@ import { useForm } from 'react-hook-form';
 import * as yup from "yup";
 import Selects from '../select';
 import Inputs from '../Input';
-import { MenuItem } from '@mui/material';
+import { FormHelperText, MenuItem } from '@mui/material';
+import moment from 'moment'
 
 const Search = (props: any) => {
-    // const [value, setValue] = useState<Dayjs | null>(null);
-    // const [value1, setValue1] = useState<Dayjs | null>(null);
-    // const [age, setAge] = useState('');
-    // const handleChange = (event: SelectChangeEvent) => {
-    //     setAge(event.target.value as string);
-    // };
     const [dataSearch, setdataSearch] = useState<any>('');
 
     const schema = yup.object().shape({
-        // startDay: yup
-        //     .string(),
-        // endDay: yup
-        //     .string()
-        //     .required("Vui lòng nhập password.")
-        //     .matches(
-        //         /^(?=\D*\d)(?=[^a-z]*[a-z])(?=.*[$@$!%*?&])(?=[^A-Z]*[A-Z]).{8,30}$/,
-        //         "Vui lòng nhập đúng định dạng password."
-        //     ),
+        startDay: yup
+            .date()
+            .test('startDay', 'End day less start day',(value?: any) => dayValidator(value)),
+        endDay: yup
+            .date()
+            .test('endDay', 'End day less start day',(value?: any) => dayValidator(value)),
     });
 
-    const form = useForm({
-        defaultValues: { startDay: '', order_by: '', endDay: ''},
-        mode: "onTouched",
+    const dayValidator = (value: any): boolean =>{
+        if (!getValues().startDay || !getValues().endDay) return true;
+        const start = moment(getValues().startDay.format('YYYY-MM-DD'));
+        const end = moment(getValues().endDay.format('YYYY-MM-DD'));
+        const cal = end.diff(start, 'day') > 0
+        console.log('errors', errors)
+        if (cal) {
+            clearErrors('endDay')
+            clearErrors('startDay')
+        }
+        return  cal ? true : false
+    }
+    const form = useForm<any>({
+        defaultValues: { startDay: '', order_by: props.defaultSelect ? props.defaultSelect : '', endDay: '', search_like: ''},
+        mode: "onChange",
         resolver: yupResolver(schema),
     });
     
@@ -42,7 +46,7 @@ const Search = (props: any) => {
         control,
         // handleSubmit,
         formState: { errors },
-        // setError,
+        clearErrors,
         getValues
     } = form;
     
@@ -57,13 +61,13 @@ const Search = (props: any) => {
     return (
         <div className={style['layer-item']}>
             <form >
-                <div className={style['label-item']}>Start Day</div>
+                <div className={style['label-item']}>Day</div>
                 <div className={style['layer-datepicker']}>
-                    <DatePickers width={'160px'} label="시작일" inputFormat="DD-MM-YYYY" register={register} name='startDay' control={control}/>
+                    <DatePickers width={'160px'} helperText={errors.startDay?.message} label="시작일" inputFormat="DD-MM-YYYY" register={register} name='startDay' control={control}/>
                 </div>
                 <div className={style['label-item']} >~</div>
                 <div className={style['layer-datepicker']}>
-                    <DatePickers width={'160px'} label="시작일" inputFormat="DD-MM-YYYY" register={register} name='endDay' control={control}/>
+                    <DatePickers width={'160px'} helperText={errors.endDay?.message} label="시작일" inputFormat="DD-MM-YYYY" register={register} name='endDay' control={control}/>
                 </div>
                 <div className={style['label-item']}>
                     Search Classification
@@ -77,6 +81,7 @@ const Search = (props: any) => {
                         props.emitDataSearch(getValues())
                     }}>Search</Button>
                 </div>
+               
             </form>
         </div>
     )

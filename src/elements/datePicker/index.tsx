@@ -11,7 +11,8 @@ const DatePickers: React.FC<any> = ({
     control,
     register,
     inputFormat="YYYY-MM-DD",
-    width='150px'
+    width='150px',
+    helperText
 }) => {
     return (
         <Controller
@@ -26,7 +27,7 @@ const DatePickers: React.FC<any> = ({
                         value={value}
                         onChange={(e) => { if (onChange) {onChange(e)}}}
                         renderInput={(ele:any) => (
-                            <Input width={width} {...ele}  helperText={''} register={register} endAdornment={ele.InputProps.endAdornment}  name={name} control={control}/>
+                            <Input width={width} {...ele}  helperText={helperText} register={register} endAdornment={ele.InputProps.endAdornment}  name={name} control={control}/>
                         )}
                     />
                 </LocalizationProvider>

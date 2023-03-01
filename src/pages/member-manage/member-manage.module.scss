@@ -1,4 +1,9 @@
 .layer-content {
     padding: 15px;
-    .layer-table {}
+    .layer-pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
 }
