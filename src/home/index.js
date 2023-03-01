@@ -9,20 +9,21 @@ import { Outlet } from 'react-router-dom'
 const Home = (props) => {
 
   return (
-    <div className={styles['main-layout']}>
-      <Header />
-      <Sidebar />
-      <div className={styles['main-content']}>
-        <div className={styles['page-content']}>
-          <Outlet  />
+    <>
+      <div className={styles['main-layout']}>
+        <Header />
+        <Sidebar />
+        <div className={styles['main-content']}>
+          <div className={styles['page-content']}>
+            <Outlet />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
 const mapStateToProps = (state) => {
-  console.log('state home', state);
   return {  
     tokenRedux: state.token,
   }; 

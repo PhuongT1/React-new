@@ -1,7 +1,11 @@
 .item-sidebar {
   position: fixed;
   width: 250px;
-  top: 65px;
+  top: 77px;
   bottom: 0;
   background: #2a3042;
+  padding: 15px;
+  .menu-item {
+    text-decoration: none;
+  }
 }

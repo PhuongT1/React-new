@@ -4,14 +4,18 @@
   flex-direction: column;
   .main-content {
     flex-grow: 1;
-    margin-top: 15px;
+    margin-top: 95px;
     display: flex;
-    padding: 0 15px 15px 265px;
+    padding: 0 15px 15px 295px;
     .page-content {
+      position: relative;
       background-color: white;
       border-radius: 10px;
       width: 100%;
       box-shadow: 0 5px 5px -3px rgb(0 0 0 / 20%), 0 8px 10px 1px rgb(0 0 0 / 14%), 0 3px 14px 2px rgb(0 0 0 / 12%);
+      .content-routing {
+        height: 100%;
+      }
     }
   }
 }
