@@ -9,6 +9,7 @@ import Loading from '../../elements/loading'
 import Paginations from '../../elements/pagination'
 import { Page } from '../../types/page.types'
 import { Member, optionSearch } from './member-manage.type'
+import moment from 'moment'
 
 const MemberManages = () => {
     const [listMember, setlistMember] = useState<Page<Member>>({data: [], meta: {}})
@@ -49,7 +50,7 @@ const MemberManages = () => {
                 <td>{item.id}</td>
                 <td>{item.provider}</td>
                 <td>{item.name}</td>
-                <td>{item?.created_at}</td>
+                <td>{moment(item.created_at).format('DD-MM-YYYY')}</td>
                 <td>{item.status === 1 ? '활동' : '휴면' }</td>
                 <td>
                     <Button style={{background: "#3f51b5"}} variant="contained">조회</Button>

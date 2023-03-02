@@ -81,7 +81,6 @@ const Search = (props: any) => {
                         props.emitDataSearch(getValues())
                     }}>Search</Button>
                 </div>
-               
             </form>
         </div>
     )

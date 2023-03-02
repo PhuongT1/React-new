@@ -8,7 +8,7 @@ const Paginations = (props: any) => {
     return (
         <Stack spacing={2}>
             <Pagination
-                count={props.totalPages ? props.totalPages : 10}
+                count={props.totalPages ? props.totalPages : 0}
                 onChange={(event: any, page) => {
                     props.emitPage(page)
                     // return true;
