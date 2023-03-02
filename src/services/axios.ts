@@ -22,7 +22,7 @@ instance.interceptors.request.use(
 )
 
 instance.interceptors.response.use(
-  res => {
+  (res: any) => {
     return res.data
   },
   async (err) => {
