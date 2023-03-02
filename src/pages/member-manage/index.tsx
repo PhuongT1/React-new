@@ -1,22 +1,22 @@
 
-import styleLogin from './member-manage.module.scss';
-import http from '../../services/axios';
-import { useEffect, useRef, useState } from 'react';
+import styleLogin from './member-manage.module.scss'
+import http from '../../services/axios'
+import { useEffect, useState } from 'react'
 import SearchItem from '../../elements/search'
 import TableData from '../../elements/table'
-import Button from '@mui/material/Button';
-import Loading from '../../elements/loading';
-import { MenuItem } from '@mui/material';
-import Paginations from '../../elements/pagination';
-import { textAlign } from '@mui/system';
+import Button from '@mui/material/Button'
+import Loading from '../../elements/loading'
+import Paginations from '../../elements/pagination'
+import { Page } from '../../types/page.types'
+import { Member, optionSearch } from './member-manage.type'
 
 const MemberManages = () => {
-    const [listMember, setlistMember] = useState<any>({})
+    const [listMember, setlistMember] = useState<Page<Member>>({data: [], meta: {}})
     const [showLoading, setshowLoading] = useState<boolean>(true)
-    const [optionSearch, setoptionSearch] = useState<any>([
-        { value1: 'search_like', label1: 'Search Like' }, 
-        { value1: 'name_like', label1: 'Name Like' },
-        { value1: 'id_eq', label1: 'Id Like' },
+    const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
+        { value: 'search_like', label: 'Search Like' }, 
+        { value: 'name_like', label: 'Name Like' },
+        { value: 'id_eq', label: 'Id Like' },
     ])
     const paramUrl = {
         per_page: 5,
@@ -25,10 +25,6 @@ const MemberManages = () => {
     }
 
     useEffect(() => {
-        const data = optionSearch.map((ele: any) => {
-            return { value: ele.value1, label: ele.label1 }
-        })
-        setoptionSearch(data)
         fetchData(paramUrl)
     }, [])
 
@@ -47,7 +43,7 @@ const MemberManages = () => {
         }
     }
 
-    const rowTable = (item?: any, index?: number): JSX.Element => {
+    const rowTable = (item: Member, index: number): JSX.Element => {
         return (
             <>
                 <td>{item.id}</td>
@@ -70,7 +66,14 @@ const MemberManages = () => {
         fetchData({...paramUrl, ...dataSearch})
     }
 
-    const dataheader: any[] = ['STT', 'Subscription path', 'Name', 'Date Create', 'Status', 'More information']
+    const dataheader: string[] = [
+        'STT',
+        'Subscription path',
+        'Name',
+        'Date Create',
+        'Status',
+        'More information'
+    ]
 
     const emitPage = (page: number) => {
         console.log('emitPage', page);
@@ -91,11 +94,4 @@ const MemberManages = () => {
         </div>
     )
 }
-
-// const mapStateToProps = (state: any) => { 
-//     return {  
-//         state: state,
-//     }; 
-// };
-// export default connect(mapStateToProps)(MemberManages);
 export default MemberManages;

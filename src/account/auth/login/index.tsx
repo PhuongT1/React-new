@@ -10,10 +10,11 @@ import Inputs from '../../../elements/Input/index'
 import Loading from '../../../elements/loading'
 import { connect } from 'react-redux';
 import { useEffect, useState } from 'react';
-
+import { User, Token } from './login.type'
+import { AxiosResponse } from 'axios';
 const Login = (props: any) => {
     const navigate = useNavigate();
-    const [dataToken, setdataToken] = useState<any>({})
+    const [dataToken, setdataToken] = useState<AxiosResponse | Token>({})
     const [showLoading, setshowLoading] = useState<boolean>(false)
     const schema = yup.object().shape({
         email: yup
@@ -29,7 +30,7 @@ const Login = (props: any) => {
             ),
     });
 
-    const form = useForm({
+    const form = useForm<User>({
         defaultValues: { email: 'admin2@test.com', password: 'Abcd1234@' },
         mode: "onTouched",
         resolver: yupResolver(schema),
@@ -40,8 +41,7 @@ const Login = (props: any) => {
         control,
         handleSubmit,
         formState: { errors },
-        setError,
-        getValues
+        setError
     } = form;
 
     const token = (dataToken?: any) => {
@@ -50,13 +50,12 @@ const Login = (props: any) => {
             data: dataToken
         };
     }
-    
 
     useEffect(() => {
         console.log('useEffect', dataToken);
     })
 
-    const fetchData = async (data:any) => {
+    const fetchData = async (data: User) => {
         try {
             const response = await http.post(`/login`, data)
             setdataToken(response)
@@ -69,7 +68,7 @@ const Login = (props: any) => {
         }
     }
 
-    const handleSubmitForm = (data: any) => {
+    const handleSubmitForm = (data: User) => {
         setshowLoading(true);
         fetchData(data);
     }
