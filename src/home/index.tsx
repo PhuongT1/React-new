@@ -6,7 +6,7 @@ import Header from './header'
 import Sidebar from './sidebar'
 import { Outlet } from 'react-router-dom'
 
-const Home = (props) => {
+const Home = () => {
 
   return (
     <>

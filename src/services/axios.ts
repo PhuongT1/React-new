@@ -1,8 +1,7 @@
 import axios from 'axios'
 import TokenService from './token.service'
-
 const instance = axios.create({
-  baseURL: `https://api-hideme.brickmate.kr/api`,
+  baseURL: import.meta.env.VITE_BASE_URL_API,
   headers: {
     'Content-Type': 'application/json'
   }
