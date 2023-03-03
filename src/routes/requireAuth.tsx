@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import TokenService from '../services/token.service'
+import TokenServiceNew from '../services/token.service'
 import routestesting from './indexAuthen';
 import Home from '../home'
 const RequireAuth = () => {
-  const user = TokenService.getAuth()
+  const user = TokenServiceNew.getAuth()
 
-  if (!user?.access_token) {
+  if (!user?.access_token ) {
     return <Navigate to="/login" replace />
   }
   return <Home />
