@@ -10,6 +10,7 @@ import Paginations from '../../elements/pagination'
 import { Page } from '../../types/page.types'
 import { Member, optionSearch } from './member-manage.type'
 import moment from 'moment'
+import { TableCell } from '@mui/material'
 
 const MemberManages = () => {
     const [listMember, setlistMember] = useState<Page<Member>>({data: [], meta: {}})
@@ -44,17 +45,26 @@ const MemberManages = () => {
         }
     }
 
+    const rowheader: string[] = [
+        'STT',
+        'Subscription path',
+        'Name',
+        'Date Create',
+        'Status',
+        'More information'
+    ]
+
     const rowTable = (item: Member, index: number): JSX.Element => {
         return (
             <>
-                <td>{item.id}</td>
-                <td>{item.provider}</td>
-                <td>{item.name}</td>
-                <td>{moment(item.created_at).format('DD-MM-YYYY')}</td>
-                <td>{item.status === 1 ? '활동' : '휴면' }</td>
-                <td>
+                <TableCell align="center">{item.id}</TableCell >
+                <TableCell align="center">{item.provider}</TableCell >
+                <TableCell align="center">{item.name}</TableCell >
+                <TableCell align="center">{moment(item.created_at).format('DD-MM-YYYY')}</TableCell >
+                <TableCell align="center">{item.status === 1 ? '활동' : '휴면' }</TableCell >
+                <TableCell align="center">
                     <Button style={{background: "#3f51b5"}} variant="contained">조회</Button>
-                </td>
+                </TableCell >
             </>
         )
     }
@@ -67,14 +77,7 @@ const MemberManages = () => {
         fetchData({...paramUrl, ...dataSearch})
     }
 
-    const dataheader: string[] = [
-        'STT',
-        'Subscription path',
-        'Name',
-        'Date Create',
-        'Status',
-        'More information'
-    ]
+    
 
     const emitPage = (page: number) => {
         console.log('emitPage', page);
@@ -86,7 +89,7 @@ const MemberManages = () => {
                 <SearchItem defaultSelect='name_like' optionSelect={optionSearch} emitDataSearch= {searchData}/>
                 <div className={`${styleLogin['layer-table']}`}>
                     { showLoading && (<Loading />) }
-                    <TableData dataheader={dataheader} rowItem={rowTable} data={listMember.data}/>
+                    <TableData dataheader={rowheader} rowItem={rowTable} data={listMember.data}/>
                 </div>
                 <div className={`${styleLogin['layer-pagination']}`} >
                     <Paginations totalPages={listMember.meta?.last_page} emitPage={emitPage}/>
