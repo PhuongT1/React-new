@@ -5,12 +5,14 @@ import { useEffect, useState } from 'react'
 import SearchItem from '../../elements/search'
 import TableData from '../../elements/table'
 import Button from '@mui/material/Button'
-import Loading from '../../elements/loading'
+// import Loading from '../../elements/loading'
 import Paginations from '../../elements/pagination'
 import { Page } from '../../types/page.types'
 import { Member, optionSearch } from './member-manage.type'
 import moment from 'moment'
 import { TableCell } from '@mui/material'
+import React from 'react'
+const Loading = React.lazy(() => import('../../elements/loading'));
 
 const MemberManages = () => {
     const [listMember, setlistMember] = useState<Page<Member>>({data: [], meta: {}})
