@@ -8,6 +8,12 @@ export default ({ mode }) => defineConfig({
   define: {
       "process.env.NODE_ENV": `"${mode}"`,
   },
+  build: {
+    outDir: 'build',
+  },
+  server: {
+    open: true,
+  },
   resolve: {
     alias: {
       src: resolve(__dirname, './src'),

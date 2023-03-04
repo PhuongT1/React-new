@@ -23,7 +23,7 @@ const Home = () => {
   )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: { token: any; }) => {
   return {  
     tokenRedux: state.token,
   }; 

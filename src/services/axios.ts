@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { InternalAxiosRequestConfig } from 'axios'
 import TokenService from './token.service'
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL_API,
@@ -8,14 +8,14 @@ const instance = axios.create({
 })
 // Add a request interceptor
 instance.interceptors.request.use(
-  config => {
+  (config) => {
     const token = TokenService.getLocalAccessToken()
     if (token) {
       config.headers!['Authorization'] = 'Bearer ' + token
     }
     return config
   },
-  error => {
+  (  error: any) => {
     return Promise.reject(error)
   }
 )
