@@ -12,6 +12,7 @@ import { Member, optionSearch } from './member-manage.type'
 import moment from 'moment'
 import { TableCell } from '@mui/material'
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 const Loading = React.lazy(() => import('elements/loading'));
 
 const MemberManages = () => {
@@ -63,7 +64,13 @@ const MemberManages = () => {
                 <TableCell align="center">{moment(item.created_at).format('DD-MM-YYYY')}</TableCell >
                 <TableCell align="center">{item.status === 1 ? 'Active' : 'None Active' }</TableCell >
                 <TableCell align="center">
-                    <Button sx={{textTransform: "none", background: "#3f51b5"}} variant="contained">Link Detail</Button>
+                    <Button sx={{textTransform: "none", background: "#3f51b5", padding: 0}} variant="contained">
+                        <NavLink style={{textDecoration: 'none', color: 'white', padding: '7px 15px'}} 
+                            to={`/admin/member-manage/view-detail/id/${item.id}`}
+                        >
+                            Link Detail
+                        </NavLink>
+                    </Button>
                 </TableCell >
             </>
         )
