@@ -33,7 +33,7 @@ const MemberManages = () => {
         fetchData(paramUrl)
     }, [])
 
-    const fetchData = async (param:any) => {
+    const fetchData = async (param: any) => {
         try {
             setshowLoading(true);
             const response = await http.get(`/admin/users`, { params: param })
@@ -66,7 +66,7 @@ const MemberManages = () => {
                 <TableCell align="center">
                     <Button sx={{textTransform: "none", background: "#3f51b5", padding: 0}} variant="contained">
                         <NavLink style={{textDecoration: 'none', color: 'white', padding: '7px 15px'}} 
-                            to={`/admin/member-manage/view-detail/id/${item.id}`}
+                            to={`view-detail/id/${item.id}`}
                         >
                             Link Detail
                         </NavLink>
