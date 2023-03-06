@@ -1,3 +1,4 @@
+import NftManage from 'pages/nft-manage';
 import React from 'react';
 
 // Lazy loading component
@@ -7,6 +8,10 @@ const routestesting = [
   {
     path: 'member-manage',
     element: <MemberManage />,
+  },
+  {
+    path: 'nft-manage',
+    element: <NftManage />,
   },
   {
     path: 'member-manage/view-detail/id/:id',

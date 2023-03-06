@@ -4,9 +4,13 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default ({ mode }) => defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      include: "**/*.tsx"
+    })
+],
   define: {
-      "process.env.NODE_ENV": `"${mode}"`,
+    "process.env.NODE_ENV": `"${mode}"`,
   },
   build: {
     outDir: 'build',

@@ -35,7 +35,7 @@ const TableData = <T,>(props: listTable<T>) => {
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                 <TableHead>
-                    <TableRow>
+                    <TableRow sx={{backgroundColor: '#ced4da'}}>
                         {
                             dataheader?.map((item: string, index: number) => { 
                                 return <TableCell align="center" key={index}>{item}</TableCell>
@@ -48,7 +48,7 @@ const TableData = <T,>(props: listTable<T>) => {
                         key={index}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            {props.rowItem && props.rowItem(item)}
+                            {props.rowItem(item, index)}
                         </TableRow>
                     ))}
                 </TableBody>
