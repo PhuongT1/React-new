@@ -7,7 +7,7 @@ type PageMeta = {
   total?: number
 }
 
-export type Page<T> = {
-  data: Array<T>
+export class Page<T> {
+  data: Array<T> = []
   meta?: PageMeta
 }

@@ -1,7 +1,8 @@
-import React from 'react'
-import { useRoutes } from 'react-router-dom'
-import Login from '../account/auth/login'
-import MemberManage from '../pages/member-manage'
+import React from 'react';
+
+// Lazy loading component
+const MemberManage = React.lazy(() => import('../pages/member-manage'));
+
 const routestesting = [
   {
     path: 'member-manage',

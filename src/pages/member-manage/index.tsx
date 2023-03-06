@@ -12,7 +12,7 @@ import { Member, optionSearch } from './member-manage.type'
 import moment from 'moment'
 import { TableCell } from '@mui/material'
 import React from 'react'
-const Loading = React.lazy(() => import('../../elements/loading'));
+const Loading = React.lazy(() => import('elements/loading'));
 
 const MemberManages = () => {
     const [listMember, setlistMember] = useState<Page<Member>>({data: [], meta: {}})
@@ -31,8 +31,6 @@ const MemberManages = () => {
     useEffect(() => {
         fetchData(paramUrl)
     }, [])
-
-    
 
     const fetchData = async (param:any) => {
         try {
@@ -79,12 +77,10 @@ const MemberManages = () => {
         fetchData({...paramUrl, ...dataSearch})
     }
 
-    
-
     const emitPage = (page: number) => {
-        console.log('emitPage', page);
         fetchData({...paramUrl, ...{ page: page }})
     }
+
     return (
         <div className={styleLogin['layer-item']}>
             <div className={`${styleLogin['layer-content']}`}>
