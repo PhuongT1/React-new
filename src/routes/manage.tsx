@@ -15,7 +15,7 @@ const routestesting = [
   },
   {
     path: 'member-manage/view-detail/id/:id',
-    element: <><p>phuong tran</p></>,
+    element: <><p>phuong tran testing detail</p></>,
   }  
 ]
 export default routestesting

@@ -1,0 +1,14 @@
+[debug] [2023-03-06T05:24:53.607Z] ----------------------------------------------------------------------
+[debug] [2023-03-06T05:24:53.608Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\PHUONG\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-03-06T05:24:53.609Z] CLI Version:   11.23.1
+[debug] [2023-03-06T05:24:53.609Z] Platform:      win32
+[debug] [2023-03-06T05:24:53.609Z] Node Version:  v18.12.1
+[debug] [2023-03-06T05:24:53.613Z] Time:          Mon Mar 06 2023 12:24:53 GMT+0700 (Indochina Time)
+[debug] [2023-03-06T05:24:53.613Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-06T05:24:53.670Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-06T05:24:53.670Z] > authorizing via signed-in user (tranphuongk9@gmail.com)
+[debug] [2023-03-06T05:24:53.671Z] [iam] checking project react-manage for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-06T05:24:53.672Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/react-manage:testIamPermissions [none]
+[debug] [2023-03-06T05:24:53.672Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/react-manage:testIamPermissions x-goog-quota-user=projects/react-manage
+[debug] [2023-03-06T05:24:53.672Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/react-manage:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
