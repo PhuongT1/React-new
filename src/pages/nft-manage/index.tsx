@@ -8,14 +8,14 @@ import Button from '@mui/material/Button'
 // import Loading from '../../elements/loading'
 import Paginations from '../../elements/pagination'
 import { Page } from '../../types/page.types'
-import { Member, optionSearch } from './member-manage.type'
+import { Nft, optionSearch } from './member-manage.type'
 import moment from 'moment'
 import { TableCell } from '@mui/material'
 import React from 'react'
 const Loading = React.lazy(() => import('elements/loading'));
 
-const MemberManages = () => {
-    const [listMember, setlistMember] = useState<Page<Member>>({data: [], meta: {}})
+const NftManage = () => {
+    const [listMember, setlistMember] = useState<Page<Nft>>({data: [], meta: {}})
     const [showLoading, setshowLoading] = useState<boolean>(true)
     const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
         { value: 'search_like', label: 'Search Like' }, 
@@ -25,17 +25,18 @@ const MemberManages = () => {
     const paramUrl = {
         per_page: 5,
         page: 1,
-        order_by: `id desc`
+        order_by: `desc`
     }
 
     useEffect(() => {
         fetchData(paramUrl)
     }, [])
 
+    // get data of Nft
     const fetchData = async (param:any) => {
         try {
             setshowLoading(true);
-            const response = await http.get(`/admin/users`, { params: param })
+            const response = await http.get(`/admin/nfts`, { params: param })
             setlistMember(response)
             setshowLoading(false);
 
@@ -47,21 +48,23 @@ const MemberManages = () => {
 
     const rowheader: string[] = [
         'STT',
-        'Subscription path',
+        'Registration Number',
         'Name',
-        'Date Create',
-        'Status',
+        'Contract address',
+        'Blockchain',
+        'Token standard',
         'More information'
     ]
 
-    const rowTable = (item: Member, index: number): JSX.Element => {
+    const rowTable = (item: Nft, index: number): JSX.Element => {
         return (
             <>
+                <TableCell align="center">{index + 1}</TableCell >
                 <TableCell align="center">{item.id}</TableCell >
-                <TableCell align="center">{item.provider}</TableCell >
                 <TableCell align="center">{item.name}</TableCell >
-                <TableCell align="center">{moment(item.created_at).format('DD-MM-YYYY')}</TableCell >
-                <TableCell align="center">{item.status === 1 ? 'Active' : 'None Active' }</TableCell >
+                <TableCell align="center">{item.contract_address}</TableCell >
+                <TableCell align="center">{item.block_chain}</TableCell >
+                <TableCell align="center">{item.token_standard}</TableCell >
                 <TableCell align="center">
                     <Button sx={{textTransform: "none", background: "#3f51b5"}} variant="contained">Link Detail</Button>
                 </TableCell >
@@ -96,4 +99,4 @@ const MemberManages = () => {
         </div>
     )
 }
-export default MemberManages;
+export default NftManage;

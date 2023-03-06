@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, circularProgressClasses } from '@mui/material'
 import styles from './loading.module.scss'
 
 interface LoadingProps {
@@ -9,10 +9,15 @@ interface LoadingProps {
 const Loading = (props: LoadingProps) => {
   return (
     <CircularProgress
-      value={70}
-      sx={{animationDuration: '500ms'}}
-      className={`${styles.default} ${props.type === 'normal' ? styles.loading_normal : styles.loading_standard}`}
+      variant="indeterminate"
+      disableShrink
+      className={`${styles.default}`}
+      sx={{
+        animationDuration: '350ms'
+      }}
       size={props.size === 'small' ? 20 : 40}
+      thickness={4}
+      {...props}
     />
   )
 }

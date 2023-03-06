@@ -6,7 +6,7 @@ import Header from './header'
 import Sidebar from './sidebar'
 import { Outlet } from 'react-router-dom'
 
-const Home = () => {
+const Layout = () => {
 
   return (
     <>
@@ -30,4 +30,4 @@ const mapStateToProps = (state: { token: any; }) => {
 };
 
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps)(Layout)

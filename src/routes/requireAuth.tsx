@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import TokenServiceNew from '../services/token.service'
-import routestesting from './indexAuthen';
-import Home from '../home'
+import Home from '../layout'
+
 const RequireAuth = () => {
   const user = TokenServiceNew.getAuth()
 
