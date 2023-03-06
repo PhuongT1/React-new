@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigate, useRoutes } from 'react-router-dom'
-import routestesting from './manage';
+import routeAdmin from './admin';
 const Login = React.lazy(() => import('../account/auth/login'));
 const RequireAuth = React.lazy(() => import('./requireAuth'));
 
@@ -18,7 +18,7 @@ const Routes = () => {
     {
       path: '/admin',
       element: <RequireAuth />,
-      children: routestesting
+      children: routeAdmin
     },
   ])
   return routes
