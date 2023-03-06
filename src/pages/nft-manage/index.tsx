@@ -12,6 +12,7 @@ import { Nft, optionSearch } from './member-manage.type'
 import moment from 'moment'
 import { TableCell } from '@mui/material'
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 const Loading = React.lazy(() => import('elements/loading'));
 
 const NftManage = () => {
@@ -66,7 +67,13 @@ const NftManage = () => {
                 <TableCell align="center">{item.block_chain}</TableCell >
                 <TableCell align="center">{item.token_standard}</TableCell >
                 <TableCell align="center">
-                    <Button sx={{textTransform: "none", background: "#3f51b5"}} variant="contained">Link Detail</Button>
+                    <Button sx={{textTransform: "none", background: "#3f51b5", padding: 0}} variant="contained">
+                        <NavLink style={{textDecoration: 'none', color: 'white', padding: '7px 15px'}} 
+                            to={`/admin/member-manage/view-detail/id/${item.id}`}
+                        >
+                            Link Detail
+                        </NavLink>
+                    </Button>
                 </TableCell >
             </>
         )
@@ -92,8 +99,13 @@ const NftManage = () => {
                     { showLoading && (<Loading />) }
                     <TableData dataheader={rowheader} rowItem={rowTable} data={listMember.data}/>
                 </div>
+                <div className={`${styleLogin['layer-register']}`}>
+                    <Button sx={{textTransform: "none", background: "#3f51b5"}} variant="contained">
+                        Register NFT 
+                    </Button>    
+                </div>
                 <div className={`${styleLogin['layer-pagination']}`} >
-                    <Paginations totalPages={listMember.meta?.last_page} emitPage={emitPage}/>
+                    <Paginations totalPages={listMember.meta?.last_page || 1} emitPage={emitPage}/>
                 </div>
             </div>
         </div>
