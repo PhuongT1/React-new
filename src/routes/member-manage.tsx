@@ -3,7 +3,7 @@ import React from 'react';
 // Lazy loading component
 const MemberManage = React.lazy(() => import('pages/member-manage'));
 
-const routeMember =  [
+const routeMember = [
   {
     path: '',
     element: <MemberManage />,

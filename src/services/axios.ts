@@ -15,13 +15,13 @@ instance.interceptors.request.use(
     }
     return config
   },
-  (  error: any) => {
+  (error: any) => {
     return Promise.reject(error)
   }
 )
 
 instance.interceptors.response.use(
-  (res: any) => {
+  (res) => {
     return res.data
   },
   async (err) => {

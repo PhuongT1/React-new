@@ -7,7 +7,6 @@ interface LoadingProps {
 }
 
 const Loading = (props: LoadingProps) => {
-  const {type, size} = props
   return (
     <CircularProgress
       variant="indeterminate"
@@ -16,7 +15,7 @@ const Loading = (props: LoadingProps) => {
       sx={{
         animationDuration: '350ms'
       }}
-      size={size === 'small' ? 20 : 40}
+      size={props.size === 'small' ? 20 : 40}
       thickness={4}
       {...props}
     />

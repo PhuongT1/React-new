@@ -1,8 +1,7 @@
 import React from 'react'
-import { FormControl, InputLabel, Input, FilledInput, FormHelperText, Select, MenuItem } from '@mui/material'
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { Controller } from 'react-hook-form'
 import styles from './select.module.scss'
-// const phoneNumberReplaceRegex = /[(a-zA-Z)(?=.*!@#$%^&*()+_/;:"'/?>.,<[{}\])]/g
 
 const Selects: React.FC<any> = ({
     name,
@@ -11,7 +10,7 @@ const Selects: React.FC<any> = ({
     containerStyle = '',
     register,
     size= 'small',
-    inputLabel,
+    label,
     menuItem,
     option = []
 }) => {
@@ -29,14 +28,13 @@ const Selects: React.FC<any> = ({
                         width: width
                     }}
                 >
-                    <InputLabel id="demo-simple-select-label">{inputLabel}</InputLabel>
+                    <InputLabel id="demo-simple-select-label">{label}</InputLabel>
                     <Select
                         onChange={(e) => { if (onChange) {onChange(e)}}}
                         {...register(name)}
                         labelId="demo-simple-select-label"
                         id={name}
                         value={value}
-                        label="Age"
                     >
                     {
                     option?.map((item: any, index: number) =>(

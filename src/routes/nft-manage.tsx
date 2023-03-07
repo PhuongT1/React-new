@@ -3,7 +3,7 @@ import React from 'react';
 // Lazy loading component
 const NftManage = React.lazy(() => import('pages/nft-manage'));
 
-const routeNftManage =  [
+const routeNftManage = [
   {
     path: '',
     element: <NftManage />,

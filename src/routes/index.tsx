@@ -7,7 +7,7 @@ const RequireAuth = React.lazy(() => import('./requireAuth'));
 const Routes = () => {
   const routes = useRoutes([
     {
-      path: '/',
+      path: '',
       element: <Navigate to="/admin/member-manage" replace  />
     },
     {
