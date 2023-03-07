@@ -1,7 +1,5 @@
-import { FunctionComponent } from "react"
-
-export type listTable<T> = {
+export interface listTable<T> {
   data: Array<T>
   dataheader: Array<string>
-  rowItem: FunctionComponent<any>
+  rowItem: (item: any, index: number) => JSX.Element
 }

@@ -6,7 +6,8 @@ import { resolve } from 'path'
 export default ({ mode }) => defineConfig({
   plugins: [
     react({
-      include: "**/*.tsx"
+      include: "**/*.tsx",
+      fastRefresh: false
     })
 ],
   define: {
@@ -17,6 +18,7 @@ export default ({ mode }) => defineConfig({
   },
   server: {
     open: true,
+    port: 3030
   },
   resolve: {
     alias: {
@@ -31,7 +33,8 @@ export default ({ mode }) => defineConfig({
       components: resolve(__dirname, './src/components'),
       assets: resolve(__dirname, './src/assets'),
       utils: resolve(__dirname, './src/utils'),
-      hooks: resolve(__dirname, './src/hooks')
+      hooks: resolve(__dirname, './src/hooks'),
+      dialog: resolve(__dirname, './src/dialog')
     }
   }
 });

@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import styles from './home.module.scss'
 import { connect } from 'react-redux';
 import Header from './header'
@@ -15,7 +15,9 @@ const Layout = () => {
         <Sidebar />
         <div className={styles['main-content']}>
           <div className={styles['page-content']}>
-            <Outlet />
+            <Suspense fallback={<div></div>}>
+              <Outlet />
+            </Suspense>
           </div>
         </div>
       </div>

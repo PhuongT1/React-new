@@ -34,7 +34,7 @@ const Inputs: React.FC<any> = ({
                     size={size}
                     error={invalid}
                     variant="filled"
-                    className={`${styles.form_control} ${containerStyle}`}
+                    className={`${!label ? styles.noneLabel: ''}`}
                     sx={{
                         width: width
                     }}

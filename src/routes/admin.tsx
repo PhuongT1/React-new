@@ -1,19 +1,19 @@
-import NftManage from 'pages/nft-manage';
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import routeMember from './member-manage';
-import routeNftManage from './nft-manage';
+import NftManage from "pages/nft-manage";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import routeMember from "./member-manage";
+import routeNftManage from "./nft-manage";
 
 const routeAdmin = [
   {
-    path: 'member-manage',
+    path: "member-manage",
     element: <Outlet />,
-    children: routeMember
+    children: routeMember,
   },
   {
-    path: 'nft-manage',
+    path: "nft-manage",
     element: <Outlet />,
-    children: routeNftManage
-  }  
-]
-export default routeAdmin
+    children: routeNftManage,
+  },
+];
+export default routeAdmin;
