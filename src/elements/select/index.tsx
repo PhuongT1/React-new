@@ -21,25 +21,24 @@ const Selects: React.FC<any> = ({
             render={({ field: { onChange, value }, fieldState: { invalid, isTouched, isDirty, error } }) => (
                 <FormControl
                     size={size}
-                    error={invalid}
+                    error={!!error}
                     variant="filled"
                     className={`${styles.form_control} ${containerStyle}`}
                     sx={{
                         width: width
                     }}
                 >
-                    <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+                    <InputLabel id={name}>{label}</InputLabel>
                     <Select
                         onChange={(e) => { if (onChange) {onChange(e)}}}
                         {...register(name)}
-                        labelId="demo-simple-select-label"
+                        labelId={name}
                         id={name}
                         value={value}
                     >
-                    {
-                    option?.map((item: any, index: number) =>(
-                        <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
-                    ))}    
+                        { option?.map((item: any, index: number) =>(
+                            <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
+                        ))}    
                     </Select>
                 </FormControl>
 

@@ -1,6 +1,6 @@
 import styleNft from "./create-nft.module.scss";
 import MenuItem from "@mui/material/MenuItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import Inputs from "elements/Input";
 import * as yup from "yup";
@@ -16,18 +16,21 @@ export interface NftProps {
 
 const CreateNft = (props: NftProps) => {
   const { onClose, open } = props;
+
   const [optionSearch, setoptionSearch] = useState<any>([
-    { value: "search_like", label: "Search Like" },
-    { value: "name_like", label: "Name Like" },
-    { value: "id_eq", label: "Id Like" },
+    { value: "ERC-721", label: "ERC-721" },
+    { value: "ERC-1155", label: "ERC-1155" }
   ])
   
   const schema = yup.object().shape({
-    name: yup.string().required()
+    name: yup.string().required(),
+    contract_address: yup.string().required(),
+    token_standard: yup.string().required(),
+    image: yup.string().required(),
   })
 
   const form = useForm<Nft>({
-    defaultValues: { block_chain: "이더리움" },
+    defaultValues: { block_chain: "이더리움", token_standard: '' },
     mode: "onTouched",
     resolver: yupResolver(schema),
   });
@@ -38,10 +41,10 @@ const CreateNft = (props: NftProps) => {
     handleSubmit,
     formState: { errors },
     setError,
+    clearErrors
   } = form;
 
-  
-
+  // Render option of select
   const menuItem = (item?: any, index?: number): JSX.Element => {
     return (
       <>
@@ -77,7 +80,7 @@ const CreateNft = (props: NftProps) => {
         </div>
         <div className={`${styleNft["row-item"]}`}>
           <label>Blockchain</label>
-          <div className={styleNft.layerInput}>이더리움</div>
+          <div className={styleNft.layerInput} style={ {marginTop: "17px"} }>이더리움</div>
         </div>
         <div className={`${styleNft["row-item"]}`}>
           <label>Token Standard</label>
@@ -86,7 +89,7 @@ const CreateNft = (props: NftProps) => {
               option={optionSearch}
               menuItem={menuItem}
               register={register}
-              name="order_by"
+              name="token_standard"
               control={control}
             />
           </div>
@@ -97,14 +100,17 @@ const CreateNft = (props: NftProps) => {
             <Inputs
               width={"100%"}
               register={register}
-              name="contract_address"
+              name="image"
               control={control}
             />
           </div>
         </div>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={() => onClose('phuong modal')}>
+        <Button autoFocus onClick={() => {
+          onClose('phuong modal')
+          clearErrors()
+        }}>
           Cancel
         </Button>
         <Button autoFocus>
