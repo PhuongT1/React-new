@@ -15,7 +15,7 @@ import { NavLink } from "react-router-dom";
 import { useQuery, useMutation } from 'react-query'
 const Loading = React.lazy(() => import("elements/loading"));
 
-const MemberManages = () => {
+const MemberManages = (props: any) => {
   const getList = async (param: any) => {
     return await http.get(`/admin/users`, { params: {
       per_page: per_page,

@@ -12,10 +12,16 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+import { QueryClientProvider, QueryClient } from 'react-query'
+const queryClient = new QueryClient()
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+      
     </Provider>
   </React.StrictMode>
 );
