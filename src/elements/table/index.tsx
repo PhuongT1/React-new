@@ -28,7 +28,7 @@ const TableData = <T,>(props: listTable<T>) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((item: T, index: number) => (
+            {data?.map((item: T, index: number) => (
               <TableRow
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
