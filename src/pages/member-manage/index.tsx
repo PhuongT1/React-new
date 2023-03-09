@@ -1,10 +1,9 @@
 import styleLogin from "./member-manage.module.scss";
-import http from "../../services/axios";
-import { useEffect, useState } from "react";
+import http from "services/axios";
+import { useState } from "react";
 import SearchItem from "../../elements/search";
 import TableData from "../../elements/table";
 import Button from "@mui/material/Button";
-// import Loading from '../../elements/loading'
 import Paginations from "../../elements/pagination";
 import { Page } from "../../types/page.types";
 import { Member, optionSearch } from "./member-manage.type";
@@ -12,60 +11,39 @@ import moment from "moment";
 import { TableCell } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useQuery, useMutation } from 'react-query'
+import { useQuery } from "react-query";
 const Loading = React.lazy(() => import("elements/loading"));
 
 const MemberManages = (props: any) => {
-  const getList = async (param: any) => {
-    return await http.get(`/admin/users`, { params: {
-      per_page: per_page,
-      page: page,
-    } });
-  }
+
+  const getList = async ({ queryKey }: any) => {
+    const [_, param] = queryKey
+    const data = await http.get(`/admin/users`, {
+      params: param
+    });
+    return data as Page<Member>;
+  };
 
   const [listMember, setlistMember] = useState<Page<Member>>({
     data: [],
     meta: {},
   });
 
-  const [showLoading, setshowLoading] = useState<any>(false);
-  const [per_page, setPer_page] = useState<any>(5);
-  const [page, setPage] = useState<any>(1);
-  const [order_by, setOrder_by] = useState<any>('id desc');
-  
+  const [paramUrl, setParamUrl] = useState<any>({
+    per_page: 5,
+    page: 1,
+    order_by: "id desc",
+  });
   const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
     { value: "search_like", label: "Search Like" },
     { value: "name_like", label: "Name Like" },
     { value: "id_eq", label: "Id Like" },
   ]);
 
-  const paramUrl = {
-    per_page: 5,
-    page: 1,
-    order_by: 'id desc',
-  };
-
-  const { data, isFetching, isLoading, error, isError } = useQuery(['todos', per_page, page, order_by], getList)
-  // const { mutate } = useMutation(getList, {
-  //   onSuccess: data => {
-  //     queryClient.invalidateQueries('articles')
-  //     }
-  //   })
-  useEffect(() => {
-    // fetchData(paramUrl)
-  }, []);
-
-  const fetchData = async (param: any) => {
-    try {
-      setshowLoading(true);
-      const response = await getList(param)
-      setlistMember(response);
-      setshowLoading(false);
-    } catch (error: any) {
-      setshowLoading(false);
-      console.log("Error", error);
-    }
-  };
+  const { data, isFetching, isLoading, error, isError } = useQuery(
+    ["member-manage", paramUrl],
+    getList
+  );
 
   const rowheader: string[] = [
     "STT",
@@ -75,7 +53,6 @@ const MemberManages = (props: any) => {
     "Status",
     "More information",
   ];
-
   const rowTable = (item: Member, _index?: number): JSX.Element => {
     return (
       <>
@@ -106,8 +83,8 @@ const MemberManages = (props: any) => {
           </Button>
         </TableCell>
       </>
-    )
-  }
+    );
+  };
 
   const searchData = (data: any = {}) => {
     if (!data) return;
@@ -116,12 +93,11 @@ const MemberManages = (props: any) => {
       data.startDay ? data.startDay.format("DD-MM-YYYY") : ""
     }${data.endDay ? `, ${data.endDay.format("DD-MM-YYYY")} 23:59:59` : ""}`;
     dataSearch[data.order_by] = data.search_like;
-    // fetchData({ ...paramUrl, ...dataSearch });
-    getList({ ...paramUrl, ...dataSearch })
+    setParamUrl({ ...paramUrl, ...dataSearch })
   };
 
   const emitPage = (page: number) => {
-    setPage(page)
+    setParamUrl({ ...paramUrl, page})
   };
 
   return (
@@ -133,7 +109,7 @@ const MemberManages = (props: any) => {
           emitDataSearch={searchData}
         />
         <div className={`${styleLogin["layer-table"]}`}>
-          {isLoading && <Loading />}
+          {isFetching && <Loading />}
           <TableData
             dataheader={rowheader}
             rowItem={rowTable}
@@ -142,7 +118,6 @@ const MemberManages = (props: any) => {
         </div>
         <div className={`${styleLogin["layer-pagination"]}`}>
           <Paginations
-            // totalPages={listMember.meta?.last_page}
             totalPages={data?.meta?.last_page}
             emitPage={emitPage}
           />

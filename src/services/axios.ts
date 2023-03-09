@@ -3,7 +3,8 @@ import TokenService from './token.service'
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL_API,
   headers: {
-    'Content-Type': 'application/json'
+    // 'Content-Type': 'application/json'
+    "Content-Type": "multipart/form-data"
   }
 })
 // Add a request interceptor
