@@ -15,9 +15,7 @@ const Layout = () => {
         <Sidebar />
         <div className={styles['main-content']}>
           <div className={styles['page-content']}>
-            <Suspense fallback={<div></div>}>
-              <Outlet />
-            </Suspense>
+            <Outlet />
           </div>
         </div>
       </div>
