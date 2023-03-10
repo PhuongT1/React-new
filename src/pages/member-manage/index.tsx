@@ -6,30 +6,27 @@ import TableData from "../../elements/table";
 import Button from "@mui/material/Button";
 import Paginations from "../../elements/pagination";
 import { Page } from "../../types/page.types";
-import { Member, optionSearch } from "./member-manage.type";
+import { Member, optionSearch, searchPage } from "./member-manage.type";
 import moment from "moment";
 import { TableCell } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "react-query";
+import { searchForm } from "models/search.type";
+
 const Loading = React.lazy(() => import("elements/loading"));
 
 const MemberManages = (props: any) => {
 
-  const getList = async ({ queryKey }: any) => {
+  const getList = async ({ queryKey }: any): Promise<Page<Member>> => {
     const [_, param] = queryKey
-    const data = await http.get(`/admin/users`, {
+    const response = await http.get(`/admin/users`, {
       params: param
     });
-    return data.data as Page<Member>;
+    return response.data
   };
 
-  const [listMember, setlistMember] = useState<Page<Member>>({
-    data: [],
-    meta: {},
-  });
-
-  const [paramUrl, setParamUrl] = useState<any>({
+  const [paramUrl, setParamUrl] = useState<searchPage>({
     per_page: 5,
     page: 1,
     order_by: "id desc",
@@ -41,10 +38,15 @@ const MemberManages = (props: any) => {
     { value: "id_eq", label: "Id Like" },
   ]);
 
-  const { data, isFetching, isLoading, error, isError } = useQuery(
+  // useQuery in order to cache data
+  const { data, isFetching, error, isError } = useQuery(
     ["member-manage", paramUrl],
     getList
   );
+
+  if (isError) {
+    console.log(error) // log error if get data has error
+  }
 
   const rowheader: string[] = [
     "STT",
@@ -55,6 +57,7 @@ const MemberManages = (props: any) => {
     "More information",
   ]
 
+  // render UI for row table
   const rowTable = (item: Member, _index?: number): JSX.Element => {
     return (
       <>
@@ -88,20 +91,21 @@ const MemberManages = (props: any) => {
     )
   }
 
-  const searchData = (data: any = {}) => {
+  const searchData = (data = {} as searchForm) => {
     if (!data) return;
-    let dataSearch = {} as any;
-    dataSearch["created_at_btw"] = `${
-      data.startDay ? data.startDay.format("DD-MM-YYYY") : ""
-    }${data.endDay ? `, ${data.endDay.format("DD-MM-YYYY")} 23:59:59` : ""}`;
+    let dataSearch = {} as searchPage
+    dataSearch["created_at_btw"] = `${data.startDay ? data.startDay?.format("DD-MM-YYYY") : ""
+      }${data.endDay ? `, ${data.endDay.format("DD-MM-YYYY")} 23:59:59` : ""}`;
     dataSearch[data.order_by] = data.search_like;
     setParamUrl({ ...paramUrl, ...dataSearch })
   }
 
+  // Patinate for pages
   const emitPage = (page: number) => {
-    setParamUrl({ ...paramUrl, page})
+    setParamUrl({ ...paramUrl, page })
   }
 
+  // render UI for Member manage
   return (
     <div className={styleLogin["layer-item"]}>
       <div className={`${styleLogin["layer-content"]}`}>
@@ -127,5 +131,5 @@ const MemberManages = (props: any) => {
       </div>
     </div>
   );
-};
+}
 export default MemberManages;

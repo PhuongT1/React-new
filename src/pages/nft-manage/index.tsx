@@ -13,18 +13,38 @@ import Loading from "elements/loading";
 import CreateNft from "dialog/create-nft";
 import { useQuery } from "react-query";
 
-export const getList = async ({ queryKey }: any): Promise<Page<Nft>> => {
-  const [, param] = queryKey;
-  const response = await http.get(`/admin/nfts`, { params: param });
-  return {
-    data: response.data.data, 
-    meta: {
-      last_page: response.data.last_page
+const NftManage = () => {
+
+  const getList = async ({ queryKey }: any): Promise<Page<Nft>> => {
+    const [, param] = queryKey;
+    const response = await http.get(`/admin/nfts`, { params: param });
+    return {
+      data: response.data.data, 
+      meta: {
+        last_page: response.data.last_page
+      }
     }
   }
-};
 
-const NftManage = () => {
+  const [paramUrl, setParamUrl] = useState<any>({
+    per_page: 15,
+    page: 1,
+    order_by: `desc`
+  });
+
+  const { data, isFetching, isLoading, error, isError } = useQuery(
+    ['nft-manage', paramUrl],
+    getList,
+    {
+      cacheTime: 5000
+    }
+  )
+
+  if (isError) {
+    console.log(error)
+  }
+
+  // set state for open (modal)
   const [open, setOpen] = useState(false);
 
   const handlOpenModal = () => {
@@ -42,22 +62,6 @@ const NftManage = () => {
     { value: "id_eq", label: "Id Like" },
   ]);
 
-  const [paramUrl, setParamUrl] = useState<any>({
-    per_page: 15,
-    page: 1,
-    order_by: `desc`,
-  });
-
-  
-
-  const { data, isFetching, isLoading, error, isError } = useQuery(
-    ['nft-manage', paramUrl],
-    getList,
-    {
-      cacheTime: 5000
-    }
-  );
-
   const searchData = (data: any = {}) => {
     if (!data) return;
     let dataSearch = {} as any;
@@ -70,7 +74,7 @@ const NftManage = () => {
 
   const emitPage = (page: number) => {
     setParamUrl({ ...paramUrl, ...{ page: page } });
-  };
+  }
 
   const rowheader: string[] = [
     "STT",
@@ -112,7 +116,7 @@ const NftManage = () => {
     );
   };
 
-
+  // Render UI
   return (
     <div className={styleLogin["layer-item"]}>
       <CreateNft open={open} onClose={handleClose} />
@@ -141,12 +145,12 @@ const NftManage = () => {
         </div>
         <div className={`${styleLogin["layer-pagination"]}`}>
           <Paginations
-            totalPages={data?.meta?.last_page || 1}
+            totalPages={data?.meta?.last_page || 0}
             emitPage={emitPage}
           />
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 export default NftManage;

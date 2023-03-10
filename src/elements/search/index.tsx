@@ -9,10 +9,13 @@ import Select from "../select";
 import Inputs from "../Input";
 import { MenuItem } from "@mui/material";
 import moment from "moment";
+import { searchForm } from "models/search.type";
+
+// Model of search props
 export interface Search {
     defaultSelect: string
     optionSelect: any[]
-    emitDataSearch: (value: any) => void
+    emitDataSearch: (value: searchForm) => void
 }
 
 const Search = (props: Search) => {
@@ -21,20 +24,20 @@ const Search = (props: Search) => {
   const schema = yup.object().shape({
     startDay: yup
       .date()
-      .test("startDay", "End day less start day", (value?: any) =>
+      .test("startDay", "End day less start day", (value?: Date) =>
         dayValidator(value)
       ),
     endDay: yup
       .date()
-      .test("endDay", "End day less start day", (value?: any) =>
+      .test("endDay", "End day less start day", (value?: Date) =>
         dayValidator(value)
       ),
   });
 
-  const dayValidator = (value: any): boolean => {
+  const dayValidator = (value?: Date): boolean => {
     if (!getValues().startDay || !getValues().endDay) return true
-    const start = moment(getValues().startDay.format("YYYY-MM-DD"))
-    const end = moment(getValues().endDay.format("YYYY-MM-DD"))
+    const start = moment(getValues().startDay?.format("YYYY-MM-DD"))
+    const end = moment(getValues().endDay?.format("YYYY-MM-DD"))
     const cal = end.diff(start, "day") > 0
     console.log("errors", errors)
     if (cal) {
@@ -44,7 +47,7 @@ const Search = (props: Search) => {
     return cal ? true : false;
   }
 
-  const form = useForm<any>({
+  const form = useForm<searchForm>({
     defaultValues: {
       startDay: "",
       order_by: defaultSelect ? defaultSelect : "",

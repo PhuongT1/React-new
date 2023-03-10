@@ -58,7 +58,7 @@ const Login = (props: any) => {
   const fetchData = async (data: User) => {
     try {
       const response = await http.post(`/login`, data);
-      localStorage.setItem("user", JSON.stringify(response));
+      localStorage.setItem("user", JSON.stringify(response.data));
       props.dispatch(token(response));
       setshowLoading(false);
       navigate("/admin/member-manage");
