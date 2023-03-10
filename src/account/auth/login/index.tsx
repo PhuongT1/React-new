@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import styleLogin from "./login.module.scss";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import http from "services/axios";
 import { useForm } from "react-hook-form";
@@ -9,13 +8,10 @@ import * as yup from "yup";
 import Input from "elements/Input/index";
 import Loading from "elements/loading";
 import { connect } from "react-redux";
-import { useEffect, useState } from "react";
 import { User, Token } from "./login.type";
-import { AxiosResponse } from "axios";
+import { useMutation } from "@tanstack/react-query"
 const Login = (props: any) => {
   const navigate = useNavigate();
-  const [dataToken, setdataToken] = useState<AxiosResponse | Token>({});
-  const [showLoading, setshowLoading] = useState<boolean>(false);
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -51,25 +47,23 @@ const Login = (props: any) => {
     };
   };
 
-  useEffect(() => {
-    console.log("useEffect", dataToken)
-  });
+  const postData = async(data: User) => {
+    const response = await http.post(`/login`, data);
+    return response
+  }
 
-  const fetchData = async (data: User) => {
-    try {
-      const response = await http.post(`/login`, data);
-      localStorage.setItem("user", JSON.stringify(response.data));
-      props.dispatch(token(response));
-      setshowLoading(false);
+  const { isLoading, mutate } = useMutation(postData,  {
+    onSuccess: (response) => {
+      localStorage.setItem("user", JSON.stringify(response.data))
       navigate("/admin/member-manage");
-    } catch (error: any) {
-      setError(error.error_field, { message: error?.message });
-    }
-  };
-
+    },
+    onError: (error: any) => {
+      setError(error?.error_field, { message: error?.message });
+    },
+  })
+  
   const handleSubmitForm = (data: User) => {
-    setshowLoading(true);
-    fetchData(data);
+    mutate(data);
   };
 
   return (
@@ -77,7 +71,7 @@ const Login = (props: any) => {
       <form onSubmit={handleSubmit(handleSubmitForm)}>
         <div className={`${styleLogin["layer-content"]}`}>
           <div className={`${styleLogin["row-item"]}`}>
-            {showLoading && <Loading />}
+            {isLoading && <Loading />}
             <Input
               width={"100%"}
               label="Email"
