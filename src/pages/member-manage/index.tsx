@@ -11,7 +11,7 @@ import moment from "moment";
 import { TableCell } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { searchForm } from "models/search.type";
 
 const Loading = React.lazy(() => import("elements/loading"));

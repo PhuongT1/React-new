@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Nft } from "models/nft.type";
 import Select from "elements/select";
 import http from "services/axios";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Loading from "elements/loading";
 export interface NftProps {
   open: boolean;
@@ -36,7 +36,8 @@ const CreateNft = (props: NftProps) => {
       token_standard: "",
       name: '',
       contract_address: '',
-      image: null
+      image: null,
+      imageName: ''
     },
     mode: "onTouched",
     resolver: yupResolver(schema),
@@ -52,7 +53,7 @@ const CreateNft = (props: NftProps) => {
     clearErrors,
   } = form;
 
-  const onSubmit = async  () => {
+  const onSubmit = async () => {
     // Mark all fiels to touch
     console.log('getValues', getValues())
     // Format data to FormData
@@ -142,6 +143,24 @@ const CreateNft = (props: NftProps) => {
                 name="image"
                 control={control}
               />
+              {/* <Inputs
+                type="text"
+                width={"100%"}
+                register={register}
+                name="imageName"
+                control={control}
+              /> */}
+            </div>
+            <div className={`${styleNft["btn-item"]}`}>
+              <Button
+                variant="contained"
+                autoFocus
+                onClick={() => {
+                  console.log('form', form)
+                }}
+              >
+                Upload
+              </Button>
             </div>
           </div>
         </DialogContent>
@@ -149,13 +168,19 @@ const CreateNft = (props: NftProps) => {
           <Button
             autoFocus
             onClick={() => {
-              onClose("phuong modal");
-              clearErrors();
+              onClose()
+              clearErrors()
             }}
           >
             Cancel
           </Button>
-          <Button autoFocus onClick={() => mutate()}>Complete</Button>
+          <Button autoFocus onClick={() => {
+            if (errors) {
+              console.log('errors', errors)
+              return;
+            }
+            mutate()
+          }}>Complete</Button>
         </DialogActions>
       </form>
     </Dialog>

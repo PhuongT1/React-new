@@ -6,13 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import allReducers from './reducers'
-const store = createStore(allReducers);
+
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-import { QueryClientProvider, QueryClient } from 'react-query'
+const store = createStore(allReducers);
 const queryClient = new QueryClient()
 
 root.render(

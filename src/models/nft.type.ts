@@ -5,4 +5,5 @@ export interface Nft {
     block_chain: string
     token_standard: string
     image: File | any
+    imageName?: string
 }

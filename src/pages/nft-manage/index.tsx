@@ -11,7 +11,7 @@ import { TableCell } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import Loading from "elements/loading";
 import CreateNft from "dialog/create-nft";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const NftManage = () => {
 

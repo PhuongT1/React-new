@@ -23,7 +23,8 @@ const Inputs: React.FC<any> = ({
     register,
     helperText,
     inputRef,
-    size= 'small'
+    size= 'small',
+    hidden
 }) => {
     return (
         <Controller
@@ -61,7 +62,7 @@ const Inputs: React.FC<any> = ({
                         // maxLength: type === 'tel' ? 13 : name === 'otp' ? 6 : undefined,
                         ...inputProps
                         }}
-                        className={`${styles.input_custom} ${customStyle} ${disabled && styles.disabled}`}
+                        className={`${styles.input_custom} ${customStyle} ${disabled && styles.disabled} ${!!hidden ? styles.hidden : ''}`}
                         type={type}
                         sx={{
                         height: height,
