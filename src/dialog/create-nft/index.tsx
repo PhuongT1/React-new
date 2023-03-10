@@ -36,7 +36,7 @@ const CreateNft = (props: NftProps) => {
       token_standard: "",
       name: '',
       contract_address: '',
-      image: ''
+      image: null
     },
     mode: "onTouched",
     resolver: yupResolver(schema),
@@ -70,7 +70,11 @@ const CreateNft = (props: NftProps) => {
   const queryClient = useQueryClient();
   const {isLoading, isError, error, mutate} = useMutation(onSubmit, {
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries(["todos", 5, 1])
+      await queryClient.invalidateQueries(['nft-manage', {
+        per_page: 15,
+        page: 1,
+        order_by: `desc`,
+      }])
       onClose()
     },
   })

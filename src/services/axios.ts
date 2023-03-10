@@ -23,7 +23,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (res) => {
-    return res.data
+    return res
   },
   async (err) => {
     const originalConfig = err.config

@@ -21,7 +21,7 @@ const MemberManages = (props: any) => {
     const data = await http.get(`/admin/users`, {
       params: param
     });
-    return data as Page<Member>;
+    return data.data as Page<Member>;
   };
 
   const [listMember, setlistMember] = useState<Page<Member>>({
@@ -33,7 +33,8 @@ const MemberManages = (props: any) => {
     per_page: 5,
     page: 1,
     order_by: "id desc",
-  });
+  })
+
   const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
     { value: "search_like", label: "Search Like" },
     { value: "name_like", label: "Name Like" },
@@ -52,7 +53,8 @@ const MemberManages = (props: any) => {
     "Date Create",
     "Status",
     "More information",
-  ];
+  ]
+
   const rowTable = (item: Member, _index?: number): JSX.Element => {
     return (
       <>
@@ -83,8 +85,8 @@ const MemberManages = (props: any) => {
           </Button>
         </TableCell>
       </>
-    );
-  };
+    )
+  }
 
   const searchData = (data: any = {}) => {
     if (!data) return;
@@ -94,11 +96,11 @@ const MemberManages = (props: any) => {
     }${data.endDay ? `, ${data.endDay.format("DD-MM-YYYY")} 23:59:59` : ""}`;
     dataSearch[data.order_by] = data.search_like;
     setParamUrl({ ...paramUrl, ...dataSearch })
-  };
+  }
 
   const emitPage = (page: number) => {
     setParamUrl({ ...paramUrl, page})
-  };
+  }
 
   return (
     <div className={styleLogin["layer-item"]}>
