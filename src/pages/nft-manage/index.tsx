@@ -12,10 +12,16 @@ import { NavLink } from "react-router-dom";
 import Loading from "elements/loading";
 import CreateNft from "dialog/create-nft";
 import { useQuery } from "react-query";
-export const getList = async ({ queryKey }: any) => {
+
+export const getList = async ({ queryKey }: any): Promise<Page<Nft>> => {
   const [, param] = queryKey;
-  const respond = await http.get(`/admin/nfts`, { params: param });
-  return {data: respond.data, meta: {last_page: respond.last_page}} as Page<Nft>;
+  const response = await http.get(`/admin/nfts`, { params: param });
+  return {
+    data: response.data.data, 
+    meta: {
+      last_page: response.data.last_page
+    }
+  }
 };
 
 const NftManage = () => {
@@ -30,10 +36,6 @@ const NftManage = () => {
     console.log("handleClose", value);
   };
 
-  const [listMember, setlistMember] = useState<Page<Nft>>({
-    data: [],
-    meta: {},
-  });
   const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
     { value: "search_like", label: "Search Like" },
     { value: "name_like", label: "Name Like" },
@@ -41,7 +43,7 @@ const NftManage = () => {
   ]);
 
   const [paramUrl, setParamUrl] = useState<any>({
-    per_page: 5,
+    per_page: 15,
     page: 1,
     order_by: `desc`,
   });
@@ -49,9 +51,26 @@ const NftManage = () => {
   
 
   const { data, isFetching, isLoading, error, isError } = useQuery(
-    ["nft-manage", paramUrl],
-    getList
+    ['nft-manage', paramUrl],
+    getList,
+    {
+      cacheTime: 5000
+    }
   );
+
+  const searchData = (data: any = {}) => {
+    if (!data) return;
+    let dataSearch = {} as any;
+    dataSearch["created_at_btw"] = `${
+      data.startDay ? data.startDay.format("DD-MM-YYYY") : ""
+    }${data.endDay ? `, ${data.endDay.format("DD-MM-YYYY")} 23:59:59` : ""}`;
+    dataSearch[data.order_by] = data.search_like;
+    setParamUrl({ ...paramUrl, ...dataSearch });
+  };
+
+  const emitPage = (page: number) => {
+    setParamUrl({ ...paramUrl, ...{ page: page } });
+  };
 
   const rowheader: string[] = [
     "STT",
@@ -93,19 +112,6 @@ const NftManage = () => {
     );
   };
 
-  const searchData = (data: any = {}) => {
-    if (!data) return;
-    let dataSearch = {} as any;
-    dataSearch["created_at_btw"] = `${
-      data.startDay ? data.startDay.format("DD-MM-YYYY") : ""
-    }${data.endDay ? `, ${data.endDay.format("DD-MM-YYYY")} 23:59:59` : ""}`;
-    dataSearch[data.order_by] = data.search_like;
-    setParamUrl({ ...paramUrl, ...dataSearch });
-  };
-
-  const emitPage = (page: number) => {
-    setParamUrl({ ...paramUrl, ...{ page: page } });
-  };
 
   return (
     <div className={styleLogin["layer-item"]}>
