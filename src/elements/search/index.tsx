@@ -13,13 +13,13 @@ import { searchForm } from "models/search.type";
 
 // Model of search props
 export interface Search {
-    defaultSelect: string
-    optionSelect: any[]
-    emitDataSearch: (value: searchForm) => void
+  defaultSelect: string;
+  optionSelect: any[];
+  emitDataSearch: (value: searchForm) => void;
 }
 
 const Search = (props: Search) => {
-    const {defaultSelect, optionSelect, emitDataSearch} = props
+  const { defaultSelect, optionSelect, emitDataSearch } = props;
 
   const schema = yup.object().shape({
     startDay: yup
@@ -35,17 +35,17 @@ const Search = (props: Search) => {
   });
 
   const dayValidator = (value?: Date): boolean => {
-    if (!getValues().startDay || !getValues().endDay) return true
-    const start = moment(getValues().startDay?.format("YYYY-MM-DD"))
-    const end = moment(getValues().endDay?.format("YYYY-MM-DD"))
-    const cal = end.diff(start, "day") > 0
-    console.log("errors", errors)
+    if (!getValues().startDay || !getValues().endDay) return true;
+    const start = moment(getValues().startDay?.format("YYYY-MM-DD"));
+    const end = moment(getValues().endDay?.format("YYYY-MM-DD"));
+    const cal = end.diff(start, "day") > 0;
+    console.log("errors", errors);
     if (cal) {
-      clearErrors("endDay")
-      clearErrors("startDay")
+      clearErrors("endDay");
+      clearErrors("startDay");
     }
     return cal ? true : false;
-  }
+  };
 
   const form = useForm<searchForm>({
     defaultValues: {

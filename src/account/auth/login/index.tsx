@@ -52,16 +52,17 @@ const Login = (props: any) => {
     return response
   }
 
-  const { isLoading, mutate } = useMutation(postData,  {
+  const { isLoading, mutate} = useMutation(postData,  {
     onSuccess: (response) => {
       localStorage.setItem("user", JSON.stringify(response.data))
-      navigate("/admin/member-manage");
+      navigate("/admin/member-manage", {state: {test:'phuong tran heheee'}});
     },
     onError: (error: any) => {
+      console.log(error)
       setError(error?.error_field, { message: error?.message });
     },
   })
-  
+
   const handleSubmitForm = (data: User) => {
     mutate(data);
   };

@@ -10,5 +10,14 @@
     .layerInput {
       flex: 1 0;
     }
+    .hidden {
+      display: none;
+    }
+    .btn-item {
+      padding-left: 15px;
+      button {
+        padding: 12px 15px;
+      }
+    }
   }
 }

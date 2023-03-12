@@ -1,5 +1,5 @@
 import React from 'react';
-
+import DetailMember from 'pages/member-manage/detail'
 // Lazy loading component
 const MemberManage = React.lazy(() => import('pages/member-manage'));
 
@@ -10,7 +10,7 @@ const routeMember = [
   },
   {
     path: 'view-detail/id/:id',
-    element: <><p>MemberManage detail</p></>,
+    element: <DetailMember />,
   } 
 ]
 export default routeMember

@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import allReducers from './reducers'
 
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -18,13 +18,13 @@ const store = createStore(allReducers);
 const queryClient = new QueryClient()
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
         <App />
       </QueryClientProvider>
-      
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 reportWebVitals();
