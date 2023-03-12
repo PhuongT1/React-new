@@ -15,9 +15,10 @@ import { useQuery } from "@tanstack/react-query";
 
 const NftManage = () => {
 
-  const getList = async ({ queryKey }: any): Promise<Page<Nft>> => {
+  const getList = async ({ queryKey }: any) => {
     const [, param] = queryKey;
-    const response = await http.get(`/admin/nfts`, { params: param });
+    console.log('queryKey', queryKey)
+    const response = await http.get<Page<Nft>>(`/admin/nfts`, { params: param });
     return {
       data: response.data.data, 
       meta: {
@@ -32,13 +33,10 @@ const NftManage = () => {
     order_by: `desc`
   });
 
-  const { data, isFetching, isLoading, error, isError } = useQuery(
-    ['nft-manage', paramUrl],
-    getList,
-    {
-      cacheTime: 5000
-    }
-  )
+  const { data, isFetching, isLoading, error, isError } = useQuery({ 
+    queryKey: ['nft-manage', paramUrl],
+    queryFn: getList 
+  })
 
   if (isError) {
     console.log(error)
@@ -73,6 +71,7 @@ const NftManage = () => {
   };
 
   const emitPage = (page: number) => {
+    console.log('page', page)
     setParamUrl({ ...paramUrl, ...{ page: page } });
   }
 
@@ -127,7 +126,7 @@ const NftManage = () => {
           emitDataSearch={searchData}
         />
         <div className={`${styleLogin["layer-table"]}`}>
-          {isLoading && <Loading />}
+          {isFetching && <Loading />}
           <TableData
             dataheader={rowheader}
             rowItem={rowTable}

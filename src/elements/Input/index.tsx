@@ -24,7 +24,8 @@ const Inputs: React.FC<any> = ({
     helperText,
     inputRef,
     size= 'small',
-    hidden
+    hidden,
+    readOnly,
 }) => {
     return (
         <Controller
@@ -33,7 +34,7 @@ const Inputs: React.FC<any> = ({
             render={({ field: { onChange, value }, fieldState: { invalid, isTouched, isDirty, error } }) => (
                 <FormControl
                     size={size}
-                    error={invalid}
+                    error={invalid || !!helperText}
                     variant="filled"
                     className={`${!label ? styles.noneLabel: ''}`}
                     sx={{
@@ -46,11 +47,14 @@ const Inputs: React.FC<any> = ({
                         </InputLabel>
                     )}
                     <FilledInput
+                        readOnly={readOnly}
                         inputRef={inputRef}
                         disabled={disabled}
                         id={name}
                         value={typeof value === 'object' ? value?.name : value}
-                        onChange={({ target: { value } }) => onChange(value)}
+                        onChange={({ target: { value } }) => {
+                            onChange(value)
+                        }}
                         placeholder={placeholder}
                         startAdornment={startAdornment}
                         endAdornment={endAdornment}
