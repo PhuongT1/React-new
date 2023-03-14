@@ -1,3 +1,4 @@
+import DetailNft from 'pages/nft-manage/detail';
 import React from 'react';
 
 // Lazy loading component
@@ -10,7 +11,7 @@ const routeNftManage = [
   },
   {
     path: 'view-detail/id/:id',
-    element: <><p>NftManage detail</p></>,
+    element: <DetailNft />,
   } 
 ]
 export default routeNftManage

@@ -17,7 +17,6 @@ import { useLocation } from "react-router-dom";
 const Loading = React.lazy(() => import("elements/loading"));
 
 const MemberManages = () => {
-  const { state } = useLocation();
   const getList = async ({ queryKey }: { queryKey: [string,searchPage]}) => {
     const [_, param] = queryKey;
     const response = await http.get<Page<Member>>(`/admin/users`, {
@@ -33,10 +32,10 @@ const MemberManages = () => {
   });
 
   // useQuery in order to cache data
-  const { data, isFetching, error, isError } = useQuery(
+  const { data, isLoading, isFetching, error, isError } = useQuery(
     ["member-manage", paramUrl],
     getList,
-    { staleTime: 5 * (60 * 1000), cacheTime: 5000 }
+    // { staleTime: 5 * (60 * 1000), cacheTime: 5000 }
   );
 
   const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
@@ -118,7 +117,7 @@ const MemberManages = () => {
           emitDataSearch={searchData}
         />
         <div className={`${styleLogin["layer-table"]}`}>
-          {isFetching && <Loading />}
+          {isLoading && <Loading />}
           <TableData
             dataheader={rowheader}
             rowItem={rowTable}

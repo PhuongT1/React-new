@@ -20,7 +20,6 @@ export interface Search {
 
 const Search = (props: Search) => {
   const { defaultSelect, optionSelect, emitDataSearch } = props;
-
   const schema = yup.object().shape({
     startDay: yup
       .date()

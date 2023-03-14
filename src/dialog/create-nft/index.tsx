@@ -20,10 +20,10 @@ export interface NftProps {
 
 const CreateNft = (props: NftProps) => {
   const { onClose, open } = props;
-  const [optionSearch, setoptionSearch] = useState<any>([
+  const optionSearch = [
     { value: "ERC-721", label: "ERC-721" },
     { value: "ERC-1155", label: "ERC-1155" },
-  ]);
+  ]
   const formRef = useRef<any>(null) // set ref
 
   // validate form with yub
@@ -60,7 +60,7 @@ const CreateNft = (props: NftProps) => {
     },
     mode: "onTouched",
     resolver: yupResolver(schema),
-  });
+  })
 
   const {
     register,
@@ -71,23 +71,24 @@ const CreateNft = (props: NftProps) => {
     formState: { errors },
     getValues,
     clearErrors,
-  } = form;
+  } = form
+
+ // set ref
+ const { ref, onChange,  ...rest } = register("image");
 
   const onSubmit = async (data: Nft) => {
     const formData: FormData = new FormData();
-    formData.append("name", data.name);
-    formData.append("contract_address", data.contract_address);
-    formData.append("token_standard", data.token_standard);
-    formData.append("block_chain", data.block_chain);
-    formData.append("image", data?.image[0]);
-
+    formData.append("name", data.name)
+    formData.append("contract_address", data.contract_address)
+    formData.append("token_standard", data.token_standard)
+    formData.append("block_chain", data.block_chain)
+    formData.append("image", data?.image[0])
     // return promise
-    await http.post(`admin/nft`, formData);
+    await http.post(`admin/nft`, formData)
   }
-  // set ref
-  const { ref, onChange,  ...rest } = register("image");
+ 
   const queryClient = useQueryClient();
-  const { isLoading, mutate } = useMutation(onSubmit, {
+  const { isLoading: loadingItem, mutate } = useMutation(onSubmit, {
     onSuccess: async () => {
       await queryClient.invalidateQueries([
         "nft-manage",
@@ -107,12 +108,13 @@ const CreateNft = (props: NftProps) => {
       <>
         <MenuItem value={item.value}>{item.label}</MenuItem>
       </>
-    );
-  };
+    )
+  }
+
   return (
     <Dialog fullWidth={true} maxWidth={"sm"} open={open}>
       <form className={`${styleNft["form-data"]}`}>
-        {isLoading && <Loading />}
+        {loadingItem && <Loading />}
         <DialogContent>
           <div className={`${styleNft["row-item"]}`}>
             <label>Name</label>
@@ -210,14 +212,14 @@ const CreateNft = (props: NftProps) => {
           <Button
             autoFocus
             onClick={ async () => {
-              console.log(getValues())
+              console.log('getValues', getValues())
               await trigger()
               if (Object.keys(errors).length !== 0) {
                 console.log("errors", errors);
                 return;
               }
               // submit data to form
-              mutate(getValues());
+              mutate(getValues())
             }}
           >
             Complete
