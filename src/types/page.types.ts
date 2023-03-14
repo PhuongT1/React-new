@@ -10,4 +10,5 @@ type PageMeta = {
 export class Page<T> {
   data: Array<T> = []
   meta?: PageMeta
+  last_page?: number
 }

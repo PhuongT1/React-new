@@ -8,22 +8,26 @@ import * as yup from "yup";
 import Input from "elements/Input/index";
 import Loading from "elements/loading";
 import { connect } from "react-redux";
-import { User, Token } from "./login.type";
+import { User } from "./login.type";
 import { useMutation } from "@tanstack/react-query"
+import { Token } from "services/token.service";
 const Login = (props: any) => {
+
   const navigate = useNavigate();
+
+  // validate with yup
   const schema = yup.object().shape({
     email: yup
       .string()
-      .email("Vui lòng nhập đúng định dạng email.")
-      .required("Vui lòng nhập email."),
+      .required("Vui lòng nhập email.")
+      .email("Vui lòng nhập đúng định dạng email."),
     password: yup
       .string()
       .required("Vui lòng nhập password.")
       .matches(
         /^(?=\D*\d)(?=[^a-z]*[a-z])(?=.*[$@$!%*?&])(?=[^A-Z]*[A-Z]).{8,30}$/,
         "Vui lòng nhập đúng định dạng password."
-      ),
+      )
   });
 
   const form = useForm<User>({
@@ -47,18 +51,17 @@ const Login = (props: any) => {
     };
   };
 
-  const postData = async(data: User) => {
-    const response = await http.post(`/login`, data);
+  const postData = (data: User) => {
+    const response = http.post<Token>(`/login`, data);
     return response
   }
 
-  const { isLoading, mutate} = useMutation(postData,  {
+  const { isLoading, mutate } = useMutation(postData,  {
     onSuccess: (response) => {
       localStorage.setItem("user", JSON.stringify(response.data))
-      navigate("/admin/member-manage", {state: {test:'phuong tran heheee'}});
+      navigate("/admin/member-manage", {state: {test:'phuong tran testing'}});
     },
     onError: (error: any) => {
-      console.log(error)
       setError(error?.error_field, { message: error?.message });
     },
   })

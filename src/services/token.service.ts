@@ -1,28 +1,35 @@
+export interface Token {
+  token_type: string
+  expires_in: number
+  access_token: string
+  refresh_token: string
+}
+
 const getLocalRefreshToken = () => {
   if (typeof window !== 'undefined') {
-    const user = JSON.parse(localStorage.getItem('user') as any)
-    return user?.refreshToken
+    const user: Token = JSON.parse(localStorage.getItem('user') as string)
+    return user.refresh_token
   }
 }
 
 const getLocalAccessToken = () => {
   if (typeof window !== 'undefined') {
-    const user = JSON.parse(localStorage.getItem('user') as any)
+    const user: Token = JSON.parse(localStorage.getItem('user') as string)
     return user?.access_token
   }
 }
 
 const updateLocalAccessToken = (token: string) => {
   if (typeof window !== 'undefined') {
-    let user = JSON.parse(localStorage.getItem('user') as any)
-    user.accessToken = token
+    let user: Token = JSON.parse(localStorage.getItem('user') as string)
+    user.access_token = token
     localStorage.setItem('user', JSON.stringify(user))
   }
 }
 
 const getAuth = () => {
   if (typeof window !== 'undefined') {
-    return JSON.parse(localStorage.getItem('user') as any)
+    return JSON.parse(localStorage.getItem('user') as string)
   }
 }
 

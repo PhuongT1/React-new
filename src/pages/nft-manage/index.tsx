@@ -16,9 +16,8 @@ import { useQuery } from "@tanstack/react-query";
 const NftManage = () => {
 
   const getList = async ({ queryKey }: any) => {
-    const [, param] = queryKey;
-    console.log('queryKey', queryKey)
-    const response = await http.get<Page<Nft>>(`/admin/nfts`, { params: param });
+    const [, param] = queryKey
+    const response = await http.get<Page<Nft>>(`/admin/nfts`, { params: param })
     return {
       data: response.data.data, 
       meta: {
@@ -35,7 +34,8 @@ const NftManage = () => {
 
   const { data, isFetching, isLoading, error, isError } = useQuery({ 
     queryKey: ['nft-manage', paramUrl],
-    queryFn: getList 
+    queryFn: getList,
+    refetchOnWindowFocus: false
   })
 
   if (isError) {

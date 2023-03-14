@@ -1,0 +1,33 @@
+
+
+.row-nft {
+    position: relative;
+    .table-layer {
+        border-top: 1px solid rgba(0, 0, 0, 0.4);
+        border-right: 1px solid rgba(0, 0, 0, 0.4);
+        .row-item {
+            display: flex;
+            p, > span {
+                padding: 10px 10px;
+                border-left: 1px solid rgba(0, 0, 0, 0.4);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+                margin-bottom: 0;
+                margin-top: 0;
+                word-break: break-word;
+                display: block;
+            }
+            .row-title {
+                background: linear-gradient(0deg, #D7D7D7, #D7D7D7);
+                width: 150px;
+            }
+            .row-content {
+                width: calc(50% - 150px);
+            }
+        }
+    }
+    .row-button {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+}
