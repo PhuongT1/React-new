@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, MenuItem } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Nft } from "models/nft.type";
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import http from "services/axios";
@@ -11,8 +11,8 @@ import * as yup from "yup";
 import Inputs from "elements/Input";
 import Select from "elements/select";
 import Loading from "elements/loading";
+
 const NftDetail = () => {
-  console.log('re render')
   const { id } = useParams();
   const [isStatusEdit, setStatusEdit] = useState<boolean>(false);
   const optionSearch = [
@@ -49,6 +49,7 @@ const NftDetail = () => {
   useEffect(() => {
     if (dataEdit) {
       queryClient.setQueryData(["nft-detail", Number(id)], dataEdit);
+      setStatusEdit(false);
     }
     if (data) {
       setData(data);
@@ -96,6 +97,26 @@ const NftDetail = () => {
     setValue("contract_address", data.contract_address);
     setValue("block_chain", data.block_chain);
     setValue("token_standard", data.token_standard);
+  };
+
+  // Render option of select
+  const menuItem = (item?: any, index?: number): JSX.Element => {
+    return (
+      <>
+        <MenuItem value={item.value}>{item.label}</MenuItem>
+      </>
+    );
+  };
+
+  // Submit form data
+  const submitData = (data: Nft) => {
+    const formData: FormData = new FormData();
+    formData.append("name", data.name);
+    formData.append("contract_address", data.contract_address);
+    formData.append("token_standard", data.token_standard);
+    formData.append("block_chain", data.block_chain);
+    // formData.append("image", data?.image[0]);
+    mutate(formData);
   };
 
   const viewNft = () => {
@@ -148,113 +169,96 @@ const NftDetail = () => {
     );
   };
 
-  // Render option of select
-  const menuItem = (item?: any, index?: number): JSX.Element => {
-    return (
-      <>
-        <MenuItem value={item.value}>{item.label}</MenuItem>
-      </>
-    );
-  };
-
-  // Submit form data
-  const submitData = (data: Nft) => {
-    const formData: FormData = new FormData();
-    formData.append("name", data.name);
-    formData.append("contract_address", data.contract_address);
-    formData.append("token_standard", data.token_standard);
-    formData.append("block_chain", data.block_chain);
-    // formData.append("image", data?.image[0]);
-    mutate(formData);
-  };
-
-  const editNft = (): JSX.Element => {
-    return (
-      <>
-        <form
-          className={`${style["form-data"]}`}
-          onSubmit={handleSubmit(submitData)}
-        >
-          <div className={`${style["row-button"]}`}>
-            <Button
-              type="submit"
-              sx={{ textTransform: "none", background: "#3f51b5" }}
-              variant="contained"
-            >
-              Update
-            </Button>
-            <Button
-              type="button"
-              sx={{
-                textTransform: "none",
-                background: "#3f51b5",
-                marginLeft: "15px",
-              }}
-              variant="contained"
-            >
-              Delete
-            </Button>
-          </div>
-          <div className={`${style["table-layer"]}`}>
-            <div className={`${style["row-item"]}`}>
-              <p className={`${style["row-title"]}`}>Id</p>
-              <p className={`${style["row-content"]}`}>{data?.id}</p>
-              <p className={`${style["row-title"]}`}>Name</p>
-              <span className={`${style["row-content"]}`}>
-                <Inputs
-                  width={"100%"}
-                  register={register}
-                  name="name"
-                  control={control}
-                />
-              </span>
+  const editNftForm = useMemo(() => {
+    console.log('dataEdit', dataEdit)
+    const editNft = (): JSX.Element => {
+      return (
+        <>
+          <form
+            className={`${style["form-data"]}`}
+            onSubmit={handleSubmit(submitData)}
+          >
+            <div className={`${style["row-button"]}`}>
+              <Button
+                type="submit"
+                sx={{ textTransform: "none", background: "#3f51b5" }}
+                variant="contained"
+              >
+                Update
+              </Button>
+              <Button
+                type="button"
+                sx={{
+                  textTransform: "none",
+                  background: "#3f51b5",
+                  marginLeft: "15px",
+                }}
+                variant="contained"
+              >
+                Delete
+              </Button>
             </div>
-            <div className={`${style["row-item"]}`}>
-              <p className={`${style["row-title"]}`}>Contract address</p>
-              <span className={`${style["row-content"]}`}>
-                <Inputs
-                  width={"100%"}
-                  register={register}
-                  name="contract_address"
-                  control={control}
-                />
-              </span>
-              <p className={`${style["row-title"]}`}>Blockchain</p>
-              <p className={`${style["row-content"]}`}>{data?.block_chain}</p>
+            <div className={`${style["table-layer"]}`}>
+              <div className={`${style["row-item"]}`}>
+                <p className={`${style["row-title"]}`}>Id</p>
+                <p className={`${style["row-content"]}`}>{data?.id}</p>
+                <p className={`${style["row-title"]}`}>Name</p>
+                <span className={`${style["row-content"]}`}>
+                  <Inputs
+                    width={"100%"}
+                    register={register}
+                    name="name"
+                    control={control}
+                  />
+                </span>
+              </div>
+              <div className={`${style["row-item"]}`}>
+                <p className={`${style["row-title"]}`}>Contract address</p>
+                <span className={`${style["row-content"]}`}>
+                  <Inputs
+                    width={"100%"}
+                    register={register}
+                    name="contract_address"
+                    control={control}
+                  />
+                </span>
+                <p className={`${style["row-title"]}`}>Blockchain</p>
+                <p className={`${style["row-content"]}`}>{data?.block_chain}</p>
+              </div>
+              <div className={`${style["row-item"]}`}>
+                <p className={`${style["row-title"]}`}>Token Standard</p>
+                <span className={`${style["row-content"]}`}>
+                  <Select
+                    option={optionSearch}
+                    menuItem={menuItem}
+                    register={register}
+                    name="token_standard"
+                    control={control}
+                  />
+                </span>
+                <p className={`${style["row-title"]}`}>Image</p>
+                <span className={`${style["row-content"]}`}>
+                  <Inputs
+                    type="file"
+                    width={"100%"}
+                    register={register}
+                    name="image"
+                    control={control}
+                  />
+                </span>
+              </div>
             </div>
-            <div className={`${style["row-item"]}`}>
-              <p className={`${style["row-title"]}`}>Token Standard</p>
-              <span className={`${style["row-content"]}`}>
-                <Select
-                  option={optionSearch}
-                  menuItem={menuItem}
-                  register={register}
-                  name="token_standard"
-                  control={control}
-                />
-              </span>
-              <p className={`${style["row-title"]}`}>Image</p>
-              <span className={`${style["row-content"]}`}>
-                <Inputs
-                  type="file"
-                  width={"100%"}
-                  register={register}
-                  name="image"
-                  control={control}
-                />
-              </span>
-            </div>
-          </div>
-        </form>
-      </>
-    );
-  };
-
+          </form>
+        </>
+      );
+    };
+    return editNft
+  }, [isStatusEdit])
   return (
     <div className={`${style["row-nft"]}`}>
-      {(isLoading || isLoadingEdit)&& <Loading />}
+      {(isLoading || isLoadingEdit) && <Loading />}
       {!isStatusEdit && viewNft()}
-      {isStatusEdit && editNft()}
+      {isStatusEdit && editNftForm()}
     </div>
   );
 };
