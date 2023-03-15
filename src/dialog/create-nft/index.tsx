@@ -28,7 +28,7 @@ const CreateNft = (props: NftProps) => {
 
   // validate form with yub
   const schema = yup.object().shape({
-    name: yup.string().required(),
+    name: yup.string().required('Name is field required'),
     contract_address: yup.string().required(),
     token_standard: yup.string().required(),
     image: yup
@@ -71,35 +71,35 @@ const CreateNft = (props: NftProps) => {
     formState: { errors },
     getValues,
     clearErrors,
+    setError,
+    reset
   } = form
 
  // set ref
  const { ref, onChange,  ...rest } = register("image");
 
-  const onSubmit = async (data: Nft) => {
-    const formData: FormData = new FormData();
-    formData.append("name", data.name)
-    formData.append("contract_address", data.contract_address)
-    formData.append("token_standard", data.token_standard)
-    formData.append("block_chain", data.block_chain)
-    formData.append("image", data?.image[0])
+  const onSubmit = async (data: FormData) => {
     // return promise
-    await http.post(`admin/nft`, formData)
+    await http.post(`admin/nft`, data)
   }
  
   const queryClient = useQueryClient();
   const { isLoading: loadingItem, mutate } = useMutation(onSubmit, {
     onSuccess: async () => {
       await queryClient.invalidateQueries([
-        "nft-manage",
-        {
-          per_page: 15,
-          page: 1,
-          order_by: `desc`,
-        },
-      ]);
+          "nft-manage",
+          {
+            per_page: 15,
+            page: 1,
+            order_by: `desc`,
+          }
+        ],
+      );
       onClose()
     },
+    onError: (error: any) => {
+      (error.message.name === 'name') && setError('name', { message: error.message.name[0] } )
+    }
   })
 
   // Render option of select
@@ -111,9 +111,20 @@ const CreateNft = (props: NftProps) => {
     )
   }
 
+  const setDataForm = (data: Nft) => {
+    const formData: FormData = new FormData();
+    formData.append("name", data.name)
+    formData.append("contract_address", data.contract_address)
+    formData.append("token_standard", data.token_standard)
+    formData.append("block_chain", data.block_chain)
+    formData.append("image", data?.image[0])
+
+    // submit data to form
+    mutate(formData)
+  }
   return (
     <Dialog fullWidth={true} maxWidth={"sm"} open={open}>
-      <form className={`${styleNft["form-data"]}`}>
+      <form className={`${styleNft["form-data"]}`} onSubmit={handleSubmit(setDataForm)}>
         {loadingItem && <Loading />}
         <DialogContent>
           <div className={`${styleNft["row-item"]}`}>
@@ -124,6 +135,7 @@ const CreateNft = (props: NftProps) => {
                 register={register}
                 name="name"
                 control={control}
+                helperText={errors.name?.message}
               />
             </div>
           </div>
@@ -204,22 +216,21 @@ const CreateNft = (props: NftProps) => {
             autoFocus
             onClick={() => {
               onClose();
-              clearErrors();
+              reset();
             }}
           >
             Cancel
           </Button>
           <Button
+            type="submit"
             autoFocus
             onClick={ async () => {
               console.log('getValues', getValues())
               await trigger()
-              if (Object.keys(errors).length !== 0) {
-                console.log("errors", errors);
-                return;
-              }
-              // submit data to form
-              mutate(getValues())
+              // if (Object.keys(errors).length !== 0) {
+              //   console.log("errors", errors);
+              //   return;
+              // }
             }}
           >
             Complete

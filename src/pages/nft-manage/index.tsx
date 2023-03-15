@@ -136,7 +136,7 @@ const NftManage = () => {
         <div className={`${styleLogin["layer-register"]}`}>
           <Button
             onClick={() => handlOpenModal()}
-            sx={{ textTransform: "none", background: "#3f51b5" }}
+            sx={{ textTransform: "none", background: "#3f51b5", padding: "10px 20px" }}
             variant="contained"
           >
             Register NFT

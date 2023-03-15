@@ -23,7 +23,6 @@ const Selects: React.FC<any> = ({
                     size={size}
                     error={!!error}
                     variant="filled"
-                    className={`${styles.form_control} ${containerStyle}`}
                     sx={{
                         width: width
                     }}
@@ -35,6 +34,7 @@ const Selects: React.FC<any> = ({
                         labelId={name}
                         id={name}
                         value={value}
+                        className={`${!label ? styles.noneLabel: ''}`}
                     >
                         { option?.map((item: any, index: number) =>(
                             <MenuItem key={index} value={item.value}>{item.label}</MenuItem>

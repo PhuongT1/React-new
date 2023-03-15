@@ -23,7 +23,7 @@ const Inputs: React.FC<any> = ({
     register,
     helperText,
     inputRef,
-    size= 'small',
+    size = 'small',
     hidden,
     readOnly,
 }) => {
@@ -36,17 +36,17 @@ const Inputs: React.FC<any> = ({
                     size={size}
                     error={invalid || !!helperText}
                     variant="filled"
-                    className={`${!label ? styles.noneLabel: ''}`}
+                    className={`${!label ? styles.noneLabel : ''}`}
                     sx={{
                         width: width
                     }}
                 >
                     {!!label && (
                         <InputLabel htmlFor={name} className={styles.input_label}>
-                        {label}
+                            {label}
                         </InputLabel>
                     )}
-                    <FilledInput
+                    <FilledInput 
                         readOnly={readOnly}
                         inputRef={inputRef}
                         disabled={disabled}
@@ -59,28 +59,25 @@ const Inputs: React.FC<any> = ({
                         startAdornment={startAdornment}
                         endAdornment={endAdornment}
                         {...register(name, {
-                        setValueAs: (v: any) => (type === 'tel' ? '' : v)
+                            setValueAs: (v: any) => (type === 'tel' ? '' : v)
                         })}
                         inputProps={{
-                        autoComplete: 'off',
-                        // maxLength: type === 'tel' ? 13 : name === 'otp' ? 6 : undefined,
-                        ...inputProps
+                            autoComplete: 'off',
+                            // maxLength: type === 'tel' ? 13 : name === 'otp' ? 6 : undefined,
+                            ...inputProps
                         }}
                         className={`${styles.input_custom} ${customStyle} ${disabled && styles.disabled} ${!!hidden ? styles.hidden : ''}`}
                         type={type}
                         sx={{
-                        height: height,
-                        borderRadius: radius
+                            height: height,
+                            borderRadius: radius
                         }}
                         onKeyDown={e => {
-                        if (onKeyDown) onKeyDown(e)
+                            if (onKeyDown) onKeyDown(e)
                         }}
                     />
-                    {!!helperText && (<FormHelperText id={name}>
-                        {helperText}
-                        </FormHelperText>)
-                    }
-                    
+                    {helperText && (<FormHelperText id={name}> {helperText} </FormHelperText>)}
+
                 </FormControl>
             )}
         />
