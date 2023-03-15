@@ -8,12 +8,12 @@ import * as yup from "yup";
 import Input from "elements/Input/index";
 import Loading from "elements/loading";
 import { connect } from "react-redux";
-import { User } from "./login.type";
-import { useMutation } from "@tanstack/react-query"
+import { errorRespond, User } from "./login.type";
+import { useMutation } from "@tanstack/react-query";
 import { Token } from "services/token.service";
 import { useEffect } from "react";
-const Login = (props: any) => {
 
+const Login = (props: any) => {
   const navigate = useNavigate();
 
   // validate with yup
@@ -28,7 +28,7 @@ const Login = (props: any) => {
       .matches(
         /^(?=\D*\d)(?=[^a-z]*[a-z])(?=.*[$@$!%*?&])(?=[^A-Z]*[A-Z]).{8,30}$/,
         "Vui lòng nhập đúng định dạng password."
-      )
+      ),
   });
 
   const form = useForm<User>({
@@ -54,25 +54,27 @@ const Login = (props: any) => {
 
   const postData = (data: User) => {
     const response = http.post<Token>(`/login`, data);
-    return response
-  }
+    return response;
+  };
 
   const { isLoading, mutate, error } = useMutation(postData, {
     onSuccess: (response) => {
-      localStorage.setItem("user", JSON.stringify(response.data))
-      navigate("/admin/member-manage", {state: {test:'phuong tran testing'}});
+      localStorage.setItem("user", JSON.stringify(response.data));
+      navigate("/admin/member-manage", {
+        state: { test: "phuong tran testing" },
+      });
     },
     // onError: (error: any) => {
     //   setError(error?.error_field, { message: error?.message });
     // },
-  })
+  });
 
   useEffect(() => {
-    if (error) {
-      setError(error?.error_field, { message: error?.message });
+    const errors = error as errorRespond;
+    if (errors) {
+      setError(errors.error_field, { message: errors?.message });
     }
-  })
-  
+  });
 
   const handleSubmitForm = (data: User) => {
     mutate(data);
