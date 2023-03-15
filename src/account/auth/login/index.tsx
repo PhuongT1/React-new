@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { User } from "./login.type";
 import { useMutation } from "@tanstack/react-query"
 import { Token } from "services/token.service";
+import { useEffect } from "react";
 const Login = (props: any) => {
 
   const navigate = useNavigate();
@@ -56,15 +57,22 @@ const Login = (props: any) => {
     return response
   }
 
-  const { isLoading, mutate } = useMutation(postData,  {
+  const { isLoading, mutate, error } = useMutation(postData, {
     onSuccess: (response) => {
       localStorage.setItem("user", JSON.stringify(response.data))
       navigate("/admin/member-manage", {state: {test:'phuong tran testing'}});
     },
-    onError: (error: any) => {
-      setError(error?.error_field, { message: error?.message });
-    },
+    // onError: (error: any) => {
+    //   setError(error?.error_field, { message: error?.message });
+    // },
   })
+
+  useEffect(() => {
+    if (error) {
+      setError(error?.error_field, { message: error?.message });
+    }
+  })
+  
 
   const handleSubmitForm = (data: User) => {
     mutate(data);
