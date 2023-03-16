@@ -32,7 +32,7 @@ const NftManage = () => {
     order_by: `desc`
   });
 
-  const { data, isFetching, isLoading, error, isError } = useQuery({ 
+  const { data, isLoading, error, isError } = useQuery({ 
     queryKey: ['nft-manage', paramUrl],
     queryFn: getList,
     refetchOnWindowFocus: false
@@ -126,7 +126,7 @@ const NftManage = () => {
           emitDataSearch={searchData}
         />
         <div className={`${styleLogin["layer-table"]}`}>
-          {isFetching && <Loading />}
+          {isLoading && <Loading />}
           <TableData
             dataheader={rowheader}
             rowItem={rowTable}

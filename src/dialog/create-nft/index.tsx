@@ -23,12 +23,12 @@ const CreateNft = (props: NftProps) => {
   const optionSearch = [
     { value: "ERC-721", label: "ERC-721" },
     { value: "ERC-1155", label: "ERC-1155" },
-  ]
-  const formRef = useRef<any>(null) // set ref
+  ];
+  const formRef = useRef<any>(null); // set ref
 
   // validate form with yub
   const schema = yup.object().shape({
-    name: yup.string().required('Name is field required'),
+    name: yup.string().required("Name is field required"),
     contract_address: yup.string().required(),
     token_standard: yup.string().required(),
     image: yup
@@ -55,12 +55,12 @@ const CreateNft = (props: NftProps) => {
       token_standard: "",
       name: "",
       contract_address: "",
-      image: undefined,
+      image: {},
       imageName: "",
     },
     mode: "onTouched",
     resolver: yupResolver(schema),
-  })
+  });
 
   const {
     register,
@@ -72,35 +72,35 @@ const CreateNft = (props: NftProps) => {
     getValues,
     clearErrors,
     setError,
-    reset
-  } = form
+    reset,
+  } = form;
 
- // set ref
- const { ref, onChange,  ...rest } = register("image");
+  // set ref
+  const { ref, onChange, ...rest } = register("image");
 
   const onSubmit = async (data: FormData) => {
     // return promise
-    await http.post(`admin/nft`, data)
-  }
- 
+    await http.post(`admin/nft`, data);
+  };
+
   const queryClient = useQueryClient();
   const { isLoading: loadingItem, mutate } = useMutation(onSubmit, {
     onSuccess: async () => {
       await queryClient.invalidateQueries([
-          "nft-manage",
-          {
-            per_page: 15,
-            page: 1,
-            order_by: `desc`,
-          }
-        ],
-      );
-      onClose()
+        "nft-manage",
+        {
+          per_page: 15,
+          page: 1,
+          order_by: `desc`,
+        },
+      ]);
+      onClose();
     },
     onError: (error: any) => {
-      (error.message.name === 'name') && setError('name', { message: error.message.name[0] } )
-    }
-  })
+      error.message.name === "name" &&
+        setError("name", { message: error.message.name[0] });
+    },
+  });
 
   // Render option of select
   const menuItem = (item?: any, index?: number): JSX.Element => {
@@ -108,23 +108,26 @@ const CreateNft = (props: NftProps) => {
       <>
         <MenuItem value={item.value}>{item.label}</MenuItem>
       </>
-    )
-  }
+    );
+  };
 
   const setDataForm = (data: Nft) => {
     const formData: FormData = new FormData();
-    formData.append("name", data.name)
-    formData.append("contract_address", data.contract_address)
-    formData.append("token_standard", data.token_standard)
-    formData.append("block_chain", data.block_chain)
-    formData.append("image", data?.image[0])
+    formData.append("name", data.name);
+    formData.append("contract_address", data.contract_address);
+    formData.append("token_standard", data.token_standard);
+    formData.append("block_chain", data.block_chain);
+    formData.append("image", data?.image[0]);
 
     // submit data to form
-    mutate(formData)
-  }
+    mutate(formData);
+  };
   return (
     <Dialog fullWidth={true} maxWidth={"sm"} open={open}>
-      <form className={`${styleNft["form-data"]}`} onSubmit={handleSubmit(setDataForm)}>
+      <form
+        className={`${styleNft["form-data"]}`}
+        onSubmit={handleSubmit(setDataForm)}
+      >
         {loadingItem && <Loading />}
         <DialogContent>
           <div className={`${styleNft["row-item"]}`}>
@@ -181,9 +184,9 @@ const CreateNft = (props: NftProps) => {
                 type="file"
                 name="image"
                 onChange={(e) => {
-                  onChange(e)
-                  setValue('imageName', getValues().image[0]?.name)
-                  trigger("image")
+                  onChange(e);
+                  setValue("imageName", getValues().image[0]?.name);
+                  trigger("image");
                 }}
               />
               <Inputs
@@ -224,9 +227,9 @@ const CreateNft = (props: NftProps) => {
           <Button
             type="submit"
             autoFocus
-            onClick={ async () => {
-              console.log('getValues', getValues())
-              await trigger()
+            onClick={async () => {
+              console.log("getValues", getValues());
+              await trigger();
               // if (Object.keys(errors).length !== 0) {
               //   console.log("errors", errors);
               //   return;
