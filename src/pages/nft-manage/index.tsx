@@ -14,7 +14,7 @@ import CreateNft from "dialog/create-nft";
 import { useQuery } from "@tanstack/react-query";
 
 const NftManage = () => {
-
+  console.log('rendercomponent')
   const getList = async ({ queryKey }: any) => {
     const [, param] = queryKey
     const response = await http.get<Page<Nft>>(`/admin/nfts`, { params: param })
@@ -114,7 +114,10 @@ const NftManage = () => {
       </>
     );
   };
-
+   
+  useEffect(() => {
+    console.log('useEffect')
+  }) 
   // Render UI
   return (
     <div className={styleLogin["layer-item"]}>
@@ -149,6 +152,7 @@ const NftManage = () => {
           />
         </div>
       </div>
+      <>{console.log('redner')}</>
     </div>
   )
 }

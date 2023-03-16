@@ -5,7 +5,7 @@ import Input from "../Input";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const DatePickers: React.FC<any> = ({
+const DatePickers= ({
   label,
   name,
   control,
@@ -13,7 +13,7 @@ const DatePickers: React.FC<any> = ({
   inputFormat = "YYYY-MM-DD",
   width = "150px",
   helperText,
-}) => {
+}: any) => {
   return (
     <Controller
       name={name}
@@ -28,11 +28,7 @@ const DatePickers: React.FC<any> = ({
             inputFormat={inputFormat}
             label={label}
             value={value}
-            onChange={(e) => {
-              if (onChange) {
-                onChange(e);
-              }
-            }}
+            onChange={(e) => onChange && onChange(e)}
             renderInput={(ele: any) => (
               <Input
                 width={width}
