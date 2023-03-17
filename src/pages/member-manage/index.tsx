@@ -6,19 +6,18 @@ import TableData from "elements/table";
 import Button from "@mui/material/Button";
 import Paginations from "elements/pagination";
 import { Page } from "types/page.types";
-import { Member, optionSearch, searchPage } from "./member-manage.type";
+import { Member, searchPage } from "./member-manage.type";
 import moment from "moment";
 import { TableCell } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { searchForm } from "models/search.type";
-import { useLocation } from "react-router-dom";
 const Loading = React.lazy(() => import("elements/loading"));
 
 const MemberManages = () => {
-  const getList = async ({ queryKey }: { queryKey: [string,searchPage]}) => {
-    const [_, param] = queryKey;
+  const getList = async ({ queryKey}: { queryKey: [ string, searchPage ]}) => {
+    const [, param] = queryKey;
     const response = await http.get<Page<Member>>(`/admin/users`, {
       params: param,
     });
@@ -38,11 +37,11 @@ const MemberManages = () => {
     // { staleTime: 5 * (60 * 1000), cacheTime: 5000 }
   );
 
-  const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
+  const optionSearch = [
     { value: "search_like", label: "Search Like" },
     { value: "name_like", label: "Name Like" },
     { value: "id_eq", label: "Id Like" },
-  ]);
+  ]
 
   if (isError) {
     console.log(error); // log error if get data has error
