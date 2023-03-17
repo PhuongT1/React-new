@@ -18,13 +18,11 @@ const TableData = <T,>(props: listTable<T>) => {
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow sx={{ backgroundColor: "#ced4da" }}>
-              {dataheader?.map((item: string, index: number) => {
-                return (
-                  <TableCell align="center" key={index}>
-                    {item}
-                  </TableCell>
-                );
-              })}
+              {dataheader?.map((item, index) => (
+                <TableCell align="center" key={index}>
+                  {item}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>

@@ -285,7 +285,7 @@ const NftDetail = () => {
               />
               <Button
                 onClick={() => {inputUpload.current.click()}}
-                sx={{ textTransform: "none", background: "#3f51b5", padding: "10px 20px" }}
+                sx={{ textTransform: "none", background: "#3f51b5", padding: "13px 20px" }}
                 variant="contained"
               >
                 Upload
@@ -296,7 +296,6 @@ const NftDetail = () => {
       </form>
     );
   };
-
   return (
     <div className={`${style["row-nft"]}`}>
       {(isLoading || isLoadingEdit) && <Loading />}
