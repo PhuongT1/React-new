@@ -11,10 +11,12 @@ import * as yup from "yup";
 import Inputs from "elements/Input";
 import Select from "elements/select";
 import Loading from "elements/loading";
-
+import { convertName } from "services/common.service";
+import PreviewImage from "dialog/preview-image";
 const NftDetail = () => {
   const { id } = useParams();
   const inputUpload = useRef<any>(null);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [isStatusEdit, setStatusEdit] = useState<boolean>(() => false);
   const optionSearch = [
     { value: "ERC-721", label: "ERC-721" },
@@ -63,21 +65,24 @@ const NftDetail = () => {
     contract_address: yup.string().required(),
     token_standard: yup.string().required(),
     image: yup
-    .mixed()
-    // .test("required", "photo is required", (file: any) => {
-    //   console.log("value", file);
-    //   if (file?.length > 0) return true;
-    //   return false;
-    // })
-    .test("fileSize", "File Size is too large", (value: any) => {
-      return value.length && value[0].size <= 5242880;
-    })
-    .test("fileType", "Unsupported File Format", (value: any) => {
-      return (
-        value?.length &&
-        ["image/jpeg", "image/png", "image/jpg"].includes(value[0].type)
-      );
-    }),
+      .mixed()
+      .nullable()
+      .test("fileSize", "File Size is too large", (value: any) => {
+        if (!value?.length) {
+          return true
+        } 
+        const size = value?.length && value[0].size < 5242880
+        return size
+      })
+      .test("fileType", "Unsupported File Format", (value: any) => {
+        if (!value?.length) {
+          return true
+        }
+        return (
+          value?.length &&
+          ["image/jpeg", "image/png", "image/jpg"].includes(value[0]?.type)
+        );
+      }),
   });
 
   const form = useForm<Nft>({
@@ -110,7 +115,7 @@ const NftDetail = () => {
     setValue("name", data.name);
     setValue("contract_address", data.contract_address);
     setValue("block_chain", data.block_chain);
-    setValue("imageName", undefined);
+    setValue("imageName", convertName(data.image));
     setValue("token_standard", data.token_standard);
   };
 
@@ -139,7 +144,7 @@ const NftDetail = () => {
       if (key !== "image") {
         data[key] && formData.append(key, data[key]);
       } else {
-        data[key][0] && formData.append(key, data[key][0]);
+        data[key]?.length && formData.append(key, data[key][0])
       }
     });
     mutate(formData);
@@ -188,7 +193,20 @@ const NftDetail = () => {
             <p className={`${style["row-title"]}`}>Token Standard</p>
             <p className={`${style["row-content"]}`}>{data?.token_standard}</p>
             <p className={`${style["row-title"]}`}>Image</p>
-            <p className={`${style["row-content"]}`}>{data?.image}</p>
+            <p className={`${style["row-content"]}`}>
+              {convertName(data?.image)}
+              <Button
+              onClick={() => setOpenModal(true)}
+                sx={{
+                  textTransform: "none",
+                  background: "#3f51b5",
+                  marginLeft: "15px",
+                }}
+                variant="contained"
+              >
+                See Image
+              </Button>
+            </p>
           </div>
         </div>
       </>
@@ -263,19 +281,19 @@ const NftDetail = () => {
             <p className={`${style["row-title"]}`}>Image</p>
             <span className={`${style["row-content"]}`}>
               <Inputs
-                inputRef = {inputUpload}
+                inputRef={inputUpload}
                 type="file"
                 register={register}
                 name="image"
                 hidden
                 control={control}
                 onChangeHandle={(file: FileList) => {
-                  setValue('imageName', file[0]?.name)
-                  trigger('image')
+                  setValue("imageName", file[0]?.name);
+                  trigger("image");
                 }}
               />
               <Inputs
-                sx={{paddingRight: '10px'}}
+                sx={{ paddingRight: "10px" }}
                 register={register}
                 name="imageName"
                 width={"calc(100% - 100px)"}
@@ -284,8 +302,14 @@ const NftDetail = () => {
                 helperText={errors.image?.message}
               />
               <Button
-                onClick={() => {inputUpload.current.click()}}
-                sx={{ textTransform: "none", background: "#3f51b5", padding: "13px 20px" }}
+                onClick={() => {
+                  inputUpload.current.click();
+                }}
+                sx={{
+                  textTransform: "none",
+                  background: "#3f51b5",
+                  padding: "13px 20px",
+                }}
                 variant="contained"
               >
                 Upload
@@ -295,9 +319,11 @@ const NftDetail = () => {
         </div>
       </form>
     );
-  };
+  }
+
   return (
     <div className={`${style["row-nft"]}`}>
+      <PreviewImage open={openModal} imageUrl={data?.image} onClose={() => setOpenModal(false)} />
       {(isLoading || isLoadingEdit) && <Loading />}
       {!isStatusEdit && viewNft()}
       {isStatusEdit && editNftForm()}

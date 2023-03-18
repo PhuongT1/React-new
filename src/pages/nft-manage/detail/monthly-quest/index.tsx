@@ -2,31 +2,37 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, MenuItem } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Nft } from "models/nft.type";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import http from "services/axios";
 import style from "./monthly-quest.module.scss";
 import * as yup from "yup";
 import Inputs from "elements/Input";
-import Select from "elements/select";
 import Loading from "elements/loading";
 import { Page } from "types/page.types";
 import { Mission, Missions } from "models/mission.type";
-import { watch } from "fs";
-import { getValue } from "@mui/system";
+import { convertName } from "services/common.service";
+import PreviewImage from "dialog/preview-image";
+import Select from "elements/select";
 
 const MonthlyQuest = () => {
   const { id } = useParams();
-
-  const rowheader: string[] = [
-    "STT",
-    "Subscription path",
-    "Name",
-    "Date Create",
-    "Status",
-    "More information",
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const optionSearch = [
+    { value: 1, label: "ERC-721" },
+    { value: 2, label: "ERC-1155" },
   ];
+
+  // Render option of select
+  const menuItem = (item?: any, index?: number): JSX.Element => {
+    return (
+      <>
+        <MenuItem value={item.value}>{item.label}</MenuItem>
+      </>
+    );
+  };
 
   const getList = async ({ queryKey }: { queryKey: [string, number] }) => {
     const [_, id] = queryKey;
@@ -34,17 +40,27 @@ const MonthlyQuest = () => {
     return { data: response.data } as Page<Mission>;
   };
 
-  const updateNft = async (data: Mission | Omit<Mission, 'id'>) => {
+  const updateNft = async (data: Mission | Omit<Mission, "id">) => {
     const response = await http.post<Nft>(`/admin/mission/${data.idTmp}`, data);
     return response.data;
   };
 
   // useQuery in order to cache data
   const { data, isLoading } = useQuery(
-    ["missions-detail", Number(id)],
+    ["admin/missions/nft", Number(id)],
     getList,
     {
       refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        data.data.map((item) =>
+        append({
+          ...item,
+          statusEdit: false,
+          idTmp: item.id,
+          imageName: item.image,
+        })
+      );
+      }
     }
   );
 
@@ -55,13 +71,27 @@ const MonthlyQuest = () => {
     data: dataEdit,
     isLoading: isLoadingEdit,
     error: errorUpdate,
-    mutate,
-  } = useMutation(updateNft);
+    mutateAsync,
+  } = useMutation(updateNft, {
+    onSuccess: () => {
+      // queryClient.invalidateQueries(["admin/missions/nft", Number(id)]);
+      // queryClient.setQueryData(["admin/missions/nft", Number(id)], dataEdit);
+    },
+  });
 
   // validate form with yub
-  const schema = yup.object().shape({});
+  const schema = yup.object().shape({
+    missions: yup.array().of(
+      yup.object().shape({
+        description: yup.string().required("Vui lòng nhập email."),
+      })
+    ),
+  });
 
   const form = useForm<Missions>({
+    defaultValues: {
+      missions: [],
+    },
     mode: "onTouched",
     resolver: yupResolver(schema),
   });
@@ -79,27 +109,71 @@ const MonthlyQuest = () => {
 
   const { append, fields, update } = useFieldArray({
     control,
-    name: "mission",
-  })
+    name: "missions",
+  });
 
-  useEffect(() => {
-    if (data) {
-      data.data.map((item) => append({ ...item, statusEdit: false, idTmp: item.id }))
-    }
-  }, [data])
+  // useEffect(() => {
+  //   if (data) {
+  //     data.data.map((item) =>
+  //       append({
+  //         ...item,
+  //         statusEdit: false,
+  //         idTmp: item.id,
+  //         imageName: item.image,
+  //       })
+  //     );
+  //   }
+  // }, [data]);
+
+  console.log("render quest");
+
+  const addMission = () => {
+    append(
+      {
+        description: "",
+        image: "",
+        imageName: "",
+        created_at: "",
+        updated_at: "",
+        deleted_at: null,
+        created_by: 0,
+        updated_by: 0,
+        deleted_by: null,
+        statusEdit: false,
+        statusAdd: true,
+      },
+      { shouldFocus: false }
+    );
+  };
 
   const viewQuest = (quest: Mission, index: number) => {
     return (
       <>
-        <div key={index} className={`${style["row-content"]}`}>
-          <span>{quest.id}</span>
-          <span>{quest.type}</span>
+        <div className={`${style["row-content"]}`}>
+          <span>{quest.idTmp}</span>
+          <span>{optionSearch[(quest.type || 1) - 1]?.label}</span>
           <span>{quest.description}</span>
-          <span>{quest.image}</span>
+          <span>
+            {convertName(quest.image)}
+            <Button
+              onClick={() => {
+                setOpenModal(true);
+                setImageUrl(quest.imageName || "");
+              }}
+              sx={{
+                textTransform: "none",
+                background: "#3f51b5",
+                marginLeft: "15px",
+              }}
+              variant="contained"
+            >
+              See Image
+            </Button>
+          </span>
           <span>
             <Button
               onClick={() => {
-                update(index, { ...quest, statusEdit: true})
+                update(index, { ...quest, statusEdit: true });
               }}
               sx={{
                 textTransform: "none",
@@ -124,29 +198,56 @@ const MonthlyQuest = () => {
       </>
     );
   };
+
   const editQuest = (quest: Mission, index: number) => {
     return (
       <>
-        <div key={index} className={`${style["row-content"]}`}>
-          <span>{quest.id}</span>
-          <span>{quest.type}</span>
+        <div className={`${style["row-content"]}`}>
+          <span>{quest.idTmp}</span>
+          <span>
+            <Select
+              option={optionSearch}
+              menuItem={menuItem}
+              register={register}
+              name={`missions.${index}.type`}
+              control={control}
+            />
+          </span>
           <span>
             <Inputs
               sx={{ paddingRight: "10px" }}
               register={register}
-              name={`mission.${index}.description`}
+              name={`missions.${index}.description`}
               width={"100%"}
               control={control}
+              helperText={
+                errors?.missions &&
+                errors?.missions[index]?.description?.message
+              }
             />
           </span>
-          <span>{quest.image}</span>
+          <span>
+            {convertName(quest.imageName || "")}
+            <Button
+              sx={{
+                textTransform: "none",
+                background: "#3f51b5",
+              }}
+              variant="contained"
+            >
+              Upload
+            </Button>
+          </span>
           <span>
             <Button
-                onClick={() => {
-                    const {id, ...rest} = getValues().mission[index]
-                    console.log('item quest', rest)
-                    mutate(rest)
-                }}
+              onClick={() => {
+                const { id, ...rest } = getValues().missions[index];
+                update(index, {
+                  ...getValues().missions[index],
+                  statusEdit: false,
+                });
+                mutateAsync(rest);
+              }}
               sx={{
                 textTransform: "none",
                 background: "#3f51b5",
@@ -173,6 +274,11 @@ const MonthlyQuest = () => {
 
   return (
     <div className={`${style["row-monthly"]}`}>
+      <PreviewImage
+        open={openModal}
+        imageUrl={imageUrl}
+        onClose={() => setOpenModal(false)}
+      />
       {(isLoading || isLoadingEdit) && <Loading />}
       <h3>Monthly quest</h3>
       <form>
@@ -187,8 +293,8 @@ const MonthlyQuest = () => {
           {fields &&
             fields.map((quest: Mission, index) => {
               return (
-                <div key={index}>
-                  {quest.statusEdit
+                <div key={quest.id}>
+                  {quest.statusEdit || quest.statusAdd
                     ? editQuest(quest, index)
                     : viewQuest(quest, index)}
                 </div>
@@ -196,6 +302,18 @@ const MonthlyQuest = () => {
             })}
         </div>
       </form>
+      <div className={`${style["row-button-add"]}`}>
+        <Button
+          onClick={addMission}
+          sx={{
+            textTransform: "none",
+            background: "#3f51b5",
+          }}
+          variant="contained"
+        >
+          Add Missison
+        </Button>
+      </div>
     </div>
   );
 };
