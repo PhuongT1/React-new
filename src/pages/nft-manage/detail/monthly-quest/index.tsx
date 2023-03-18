@@ -50,17 +50,7 @@ const MonthlyQuest = () => {
     ["admin/missions/nft", Number(id)],
     getList,
     {
-      refetchOnWindowFocus: false,
-      onSuccess: (data) => {
-        data.data.map((item) =>
-        append({
-          ...item,
-          statusEdit: false,
-          idTmp: item.id,
-          imageName: item.image,
-        })
-      );
-      }
+      refetchOnWindowFocus: false
     }
   );
 
@@ -73,9 +63,20 @@ const MonthlyQuest = () => {
     error: errorUpdate,
     mutateAsync,
   } = useMutation(updateNft, {
-    onSuccess: () => {
-      // queryClient.invalidateQueries(["admin/missions/nft", Number(id)]);
-      // queryClient.setQueryData(["admin/missions/nft", Number(id)], dataEdit);
+    onSuccess: (dataEdit) => {
+      dataEdit.nft_id = Number(dataEdit.nft_id);
+      dataEdit.type = Number(dataEdit.type);
+      const dataCache = queryClient.getQueryData([
+        "admin/missions/nft",
+        Number(id),
+      ]) as Page<Mission>;
+      const index = dataCache.data.findIndex((item) => item.id == dataEdit.id); // find index
+      dataCache.data[index] = dataEdit; // overrise data
+
+      // Update cache
+      queryClient.setQueryData(["admin/missions/nft", Number(id)], {
+        data: [...dataCache.data],
+      });
     },
   });
 
@@ -83,7 +84,7 @@ const MonthlyQuest = () => {
   const schema = yup.object().shape({
     missions: yup.array().of(
       yup.object().shape({
-        description: yup.string().required("Vui lòng nhập email."),
+        description: yup.string().required("Please input a type"),
       })
     ),
   });
@@ -107,23 +108,25 @@ const MonthlyQuest = () => {
     getValues,
   } = form;
 
-  const { append, fields, update } = useFieldArray({
+  const { append, fields, update, remove } = useFieldArray({
     control,
     name: "missions",
   });
 
-  // useEffect(() => {
-  //   if (data) {
-  //     data.data.map((item) =>
-  //       append({
-  //         ...item,
-  //         statusEdit: false,
-  //         idTmp: item.id,
-  //         imageName: item.image,
-  //       })
-  //     );
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data) {
+      remove();
+      data.data &&
+        data.data.map((item) =>
+          append({
+            ...item,
+            statusEdit: false,
+            idTmp: item.id,
+            imageName: item.image,
+          })
+        );
+    }
+  }, [data]);
 
   console.log("render quest");
 
