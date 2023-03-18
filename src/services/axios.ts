@@ -1,5 +1,6 @@
-import axios, { InternalAxiosRequestConfig } from 'axios'
+import axios from 'axios'
 import TokenService from './token.service'
+
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL_API,
   headers: {
@@ -7,6 +8,7 @@ const instance = axios.create({
     "Content-Type": "multipart/form-data"
   }
 })
+
 // Add a request interceptor
 instance.interceptors.request.use(
   (config) => {
