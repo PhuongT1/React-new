@@ -1,16 +1,16 @@
-import style from "./spagination.module.scss";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
-import { PaginationItem } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import style from "./spagination.module.scss"
+import Pagination from "@mui/material/Pagination"
+import Stack from "@mui/material/Stack"
+import { PaginationItem } from "@mui/material"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 interface PaginationsProps {
-  totalPages?: number;
-  emitPage: (page: number) => void;
+  totalPages?: number
+  emitPage: (page: number) => void
 }
 
 const Paginations = (props: PaginationsProps) => {
-  const {totalPages, emitPage} = props
+  const { totalPages, emitPage } = props
   return (
     <Stack spacing={2}>
       <Pagination
@@ -24,6 +24,6 @@ const Paginations = (props: PaginationsProps) => {
         )}
       />
     </Stack>
-  );
-};
-export default Paginations;
+  )
+}
+export default Paginations
