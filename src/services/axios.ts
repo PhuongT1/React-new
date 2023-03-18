@@ -1,5 +1,5 @@
-import axios from 'axios'
-import TokenService from './token.service'
+import axios from "axios"
+import TokenService from "./token.service"
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL_API,
@@ -14,7 +14,7 @@ instance.interceptors.request.use(
   (config) => {
     const token = TokenService.getLocalAccessToken()
     if (token) {
-      config.headers!['Authorization'] = 'Bearer ' + token
+      config.headers!["Authorization"] = "Bearer " + token
     }
     return config
   },
@@ -29,14 +29,14 @@ instance.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config
-    if (!originalConfig) return;
-    if (originalConfig.url !== '/authentication/admin-login' && err.response) {
+    if (!originalConfig) return
+    if (originalConfig.url !== "/authentication/admin-login" && err.response) {
       // Access Token was expired
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true
 
         try {
-          const rs = await instance.post('/v1/token/refresh', {
+          const rs = await instance.post("/v1/token/refresh", {
             refresh: TokenService.getLocalRefreshToken()
           })
 

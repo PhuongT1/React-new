@@ -1,7 +1,7 @@
-import React from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { Controller } from "react-hook-form";
-import styles from "./select.module.scss";
+import React from "react"
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material"
+import { Controller } from "react-hook-form"
+import styles from "./select.module.scss"
 
 const Selects: React.FC<any> = ({
   name,
@@ -10,7 +10,7 @@ const Selects: React.FC<any> = ({
   register,
   size = "small",
   label,
-  option = [],
+  option = []
 }) => {
   return (
     <Controller
@@ -18,21 +18,21 @@ const Selects: React.FC<any> = ({
       control={control}
       render={({
         field: { onChange, value },
-        fieldState: { invalid, isTouched, isDirty, error },
+        fieldState: { invalid, isTouched, isDirty, error }
       }) => (
         <FormControl
           size={size}
           error={!!error}
           variant="filled"
           sx={{
-            width: width,
+            width: width
           }}
         >
           <InputLabel id={name}>{label}</InputLabel>
           <Select
             onChange={(e) => {
               if (onChange) {
-                onChange(e);
+                onChange(e)
               }
             }}
             {...register(name)}
@@ -50,7 +50,7 @@ const Selects: React.FC<any> = ({
         </FormControl>
       )}
     />
-  );
-};
+  )
+}
 
-export default Selects;
+export default Selects

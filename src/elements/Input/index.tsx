@@ -1,12 +1,12 @@
-import React from "react";
+import React from "react"
 import {
   FormControl,
   InputLabel,
   FilledInput,
-  FormHelperText,
-} from "@mui/material";
-import { Controller } from "react-hook-form";
-import styles from "./input.module.scss";
+  FormHelperText
+} from "@mui/material"
+import { Controller } from "react-hook-form"
+import styles from "./input.module.scss"
 
 const Inputs = ({
   label,
@@ -31,7 +31,7 @@ const Inputs = ({
   hidden,
   readOnly,
   onChangeHandle,
-  sx,
+  sx
 }: any) => {
   return (
     <Controller
@@ -39,7 +39,7 @@ const Inputs = ({
       control={control}
       render={({
         field: { onChange, value },
-        fieldState: { invalid, isTouched, isDirty, error },
+        fieldState: { invalid, isTouched, isDirty, error }
       }) => (
         <FormControl
           size={size}
@@ -48,7 +48,7 @@ const Inputs = ({
           className={`${!label ? styles.noneLabel : ""}`}
           sx={{
             ...sx,
-            width: width,
+            width: width
           }}
         >
           {!!label && (
@@ -61,7 +61,7 @@ const Inputs = ({
             inputRef={inputRef}
             disabled={disabled}
             id={name}
-            // value={typeof value === "object" ? value?.name : value}
+            //  value={typeof value === "object" ? value?.name : value}
             placeholder={placeholder}
             startAdornment={startAdornment}
             endAdornment={endAdornment}
@@ -74,20 +74,17 @@ const Inputs = ({
             inputProps={{
               autoComplete: "off",
               // maxLength: type === 'tel' ? 13 : name === 'otp' ? 6 : undefined,
-              ...inputProps,
+              ...inputProps
             }}
             onChange={({
-              target: { value, files },
+              target: { value, files }
             }: React.ChangeEvent<HTMLInputElement>) => {
-              const valInput = type === "file" ? files : value;
-              onChange(valInput);
-              if (onChangeHandle) onChangeHandle(valInput); // emit a function onChange
+              const valInput = type === "file" ? files : value
+              onChange(valInput)
+              if (onChangeHandle) onChangeHandle(valInput) // emit a function onChange
             }}
             type={type}
-            sx={{
-              height: height,
-              borderRadius: radius,
-            }}
+            sx={{ height: height, borderRadius: radius }}
             onKeyDown={onKeyDown}
           />
           {helperText && (
@@ -96,7 +93,7 @@ const Inputs = ({
         </FormControl>
       )}
     />
-  );
-};
+  )
+}
 
-export default Inputs;
+export default Inputs

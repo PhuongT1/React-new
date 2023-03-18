@@ -1,18 +1,17 @@
-import React from "react";
-import { Controller } from "react-hook-form";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import Input from "../Input";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { Controller } from 'react-hook-form'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import Input from '../Input'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
-const DatePickers= ({
+const DatePickers = ({
   label,
   name,
   control,
   register,
-  inputFormat = "YYYY-MM-DD",
-  width = "150px",
-  helperText,
+  inputFormat = 'YYYY-MM-DD',
+  width = '150px',
+  helperText
 }: any) => {
   return (
     <Controller
@@ -20,7 +19,7 @@ const DatePickers= ({
       control={control}
       render={({
         field: { onChange, value },
-        fieldState: { invalid, isTouched, isDirty, error },
+        fieldState: { invalid, isTouched, isDirty, error }
       }) => (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
@@ -44,7 +43,7 @@ const DatePickers= ({
         </LocalizationProvider>
       )}
     />
-  );
-};
+  )
+}
 
-export default DatePickers;
+export default DatePickers

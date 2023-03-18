@@ -7,7 +7,7 @@ interface LoadingProps {
 }
 
 const Loading = (props: LoadingProps) => {
-  const {type, size} = props
+  const { type, size } = props
   return (
     <CircularProgress
       variant="indeterminate"
