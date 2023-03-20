@@ -1,12 +1,34 @@
-import React from "react"
+import React from 'react'
 import {
   FormControl,
   InputLabel,
   FilledInput,
-  FormHelperText
-} from "@mui/material"
-import { Controller } from "react-hook-form"
-import styles from "./input.module.scss"
+  FormHelperText,
+  InputBase,
+  InputBaseProps
+} from '@mui/material'
+import {
+  Control,
+  Controller,
+  FieldValues,
+  UseControllerProps,
+  UseFormRegister
+} from 'react-hook-form'
+import styles from './input.module.scss'
+
+export interface propInputType extends InputBaseProps {
+  label?: string
+  height?: string
+  width?: string
+  customStyle?: string
+  containerStyle?: string
+  radius?: string
+  helperText?: string
+  control: Control<FieldValues | any>
+  register: UseFormRegister<FieldValues | any>
+  name: string
+  onChangeHandle?: (value: any) => void
+}
 
 const Inputs = ({
   label,
@@ -15,24 +37,24 @@ const Inputs = ({
   startAdornment,
   endAdornment,
   type,
-  height = "",
-  width = "auto",
+  height = '',
+  width = 'auto',
   inputProps,
-  customStyle = "",
+  customStyle = '',
   onKeyDown,
   placeholder,
-  containerStyle = "",
-  radius = "",
+  containerStyle = '',
+  radius = '',
   disabled,
   register,
   helperText,
   inputRef,
-  size = "small",
+  size = 'small',
   hidden,
   readOnly,
   onChangeHandle,
   sx
-}: any) => {
+}: propInputType) => {
   return (
     <Controller
       name={name}
@@ -45,7 +67,7 @@ const Inputs = ({
           size={size}
           error={invalid || !!helperText}
           variant="filled"
-          className={`${!label ? styles.noneLabel : ""}`}
+          className={`${!label ? styles.noneLabel : ''}`}
           sx={{
             ...sx,
             width: width
@@ -67,19 +89,19 @@ const Inputs = ({
             endAdornment={endAdornment}
             className={`${styles.input_custom} ${customStyle} ${
               disabled && styles.disabled
-            } ${!!hidden ? styles.hidden : ""}`}
+            } ${!!hidden ? styles.hidden : ''}`}
             {...register(name, {
               // setValueAs: (v: any) => (type === "tel" ? "" : v),
             })}
             inputProps={{
-              autoComplete: "off",
+              autoComplete: 'off',
               // maxLength: type === 'tel' ? 13 : name === 'otp' ? 6 : undefined,
               ...inputProps
             }}
             onChange={({
               target: { value, files }
             }: React.ChangeEvent<HTMLInputElement>) => {
-              const valInput = type === "file" ? files : value
+              const valInput = type === 'file' ? files : value
               onChange(valInput)
               if (onChangeHandle) onChangeHandle(valInput) // emit a function onChange
             }}

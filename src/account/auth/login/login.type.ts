@@ -5,5 +5,5 @@ export interface User {
 
 export interface errorRespond {
   message: string
-  error_field: "email" | "password"
+  error_field: 'email' | 'password'
 }
