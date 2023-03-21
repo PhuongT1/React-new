@@ -15,7 +15,6 @@ import { Mission, Missions } from 'models/mission.type'
 import { convertName } from 'services/common.service'
 import PreviewImage from 'dialog/preview-image'
 import Select from 'elements/select'
-
 const MonthlyQuest = () => {
   const { id } = useParams()
   const [openModal, setOpenModal] = useState<boolean>(false)
@@ -46,8 +45,16 @@ const MonthlyQuest = () => {
     return response.data
   }
 
-  const addMissionAPI = async (data: Omit<Mission, 'id'>) => {
-    const response = await http.post<Nft>(`admin/missions/nft/${id}`, data)
+  const addMissionAPI = async (dataPost: Omit<Mission, 'id'>) => {
+    const formData: FormData = new FormData()
+
+    Object.keys(dataPost).map((key: string) => {
+      formData.append(key, dataPost[key as keyof Omit<Mission, 'id'>])
+    })
+    // formData.append('image', dataPost['image'])
+    // formData.append('description', dataPost['description'])
+    // formData.append('type', dataPost['type'])
+    const response = await http.post<Nft>(`admin/mission/nft/${id}`, formData)
     return response.data
   }
 
@@ -78,7 +85,6 @@ const MonthlyQuest = () => {
       ]) as Page<Mission>
       const index = dataCache.data.findIndex((item) => item.id == dataEdit.id) // find index
       dataCache.data[index] = dataEdit // overrise data
-
       // Update cache
       queryClient.setQueryData(['admin/missions/nft', Number(id)], {
         data: [...dataCache.data]
@@ -89,16 +95,34 @@ const MonthlyQuest = () => {
   const {
     data: dataAdd,
     error: errorAdd,
+    isLoading: isLoadingAdd,
     mutateAsync: mutateAddAsync
-  } = useMutation(addMissionAPI, {
-    onSuccess: (dataEdit) => {}
-  })
+  } = useMutation(addMissionAPI)
 
   // validate form with yub
   const schema = yup.object().shape({
     missions: yup.array().of(
       yup.object().shape({
-        description: yup.string().required('Please input a type')
+        description: yup.string().required('Please input a type'),
+        image: yup
+          .mixed()
+          .required('Please select image')
+          .test('fileSize', 'File Size is too large', (value: any) => {
+            if (!value?.length) {
+              return true
+            }
+            const size = value?.length && value[0].size < 5242880
+            return size
+          })
+          .test('fileType', 'Unsupported File Format', (value: any) => {
+            if (!value?.length) {
+              return true
+            }
+            return (
+              value?.length &&
+              ['image/jpeg', 'image/png', 'image/jpg'].includes(value[0]?.type)
+            )
+          })
       })
     )
   })
@@ -155,7 +179,8 @@ const MonthlyQuest = () => {
         updated_by: 0,
         deleted_by: null,
         statusEdit: false,
-        statusAdd: true
+        statusAdd: true,
+        type: 1
       },
       { shouldFocus: false }
     )
@@ -169,7 +194,7 @@ const MonthlyQuest = () => {
           <span>{optionSearch[(quest.type || 1) - 1]?.label}</span>
           <span>{quest.description}</span>
           <span>
-            {convertName(quest.image)}
+            {convertName(quest.imageName)}
             <Button
               onClick={() => {
                 setOpenModal(true)
@@ -213,7 +238,7 @@ const MonthlyQuest = () => {
       </>
     )
   }
-
+  console.log('errors', errors)
   const editQuest = (quest: Mission, index: number) => {
     return (
       <>
@@ -242,8 +267,19 @@ const MonthlyQuest = () => {
             />
           </span>
           <span>
-            {convertName(quest.imageName || '')}
             <Inputs
+              disabled
+              sx={{ paddingRight: '10px' }}
+              register={register}
+              name={`missions.${index}.imageName`}
+              width={'100%'}
+              control={control}
+              helperText={
+                errors?.missions && errors?.missions[index]?.image?.message
+              }
+            />
+            <Inputs
+              hidden
               type="file"
               sx={{ paddingRight: '10px' }}
               register={register}
@@ -251,6 +287,15 @@ const MonthlyQuest = () => {
               width={'100%'}
               control={control}
               inputRef={(e: any) => (inputFiles.current[index] = e)}
+              onChangeHandle={(file: FileList) => {
+                update(index, {
+                  ...quest,
+                  ...getValues().missions[index],
+                  imageName: file[0]?.name
+                })
+                // setValue(`missions.${index}.imageName`, file[0]?.name)
+                trigger(`missions.${index}.image`)
+              }}
             />
             <Button
               onClick={() => inputFiles.current[index].click()}
@@ -267,10 +312,6 @@ const MonthlyQuest = () => {
             <Button
               onClick={async () => {
                 await trigger(`missions.${index}`)
-                console.log(
-                  'Error',
-                  errors?.missions && errors?.missions[index]
-                )
                 if (
                   Object.keys((errors.missions && errors.missions[index]) || {})
                     .length === 0
@@ -278,11 +319,16 @@ const MonthlyQuest = () => {
                   const { id, ...rest } = getValues().missions[index]
                   update(index, {
                     ...getValues().missions[index],
-                    statusEdit: false
+                    statusEdit: false,
+                    statusAdd: false
                   })
 
-                  !rest.statusAdd && mutateAsync(rest)
-                  rest.statusAdd && mutateAddAsync(rest)
+                  const dataPost = {
+                    ...rest,
+                    image: getValues().missions[index].image[0]
+                  }
+                  !rest.statusAdd && mutateAsync(dataPost)
+                  rest.statusAdd && mutateAddAsync(dataPost)
                 }
               }}
               sx={{
@@ -326,7 +372,7 @@ const MonthlyQuest = () => {
         imageUrl={imageUrl}
         onClose={() => setOpenModal(false)}
       />
-      {(isLoading || isLoadingEdit) && <Loading />}
+      {(isLoading || isLoadingEdit || isLoadingAdd) && <Loading />}
       <h3>Monthly quest</h3>
       <form>
         <div className={`${style['table-content']}`}>

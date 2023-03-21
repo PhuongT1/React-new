@@ -1,5 +1,5 @@
 export interface listTable<T> {
-  data: Array<T> | any
-  dataheader: Array<string>
+  data?: T[]
+  dataheader: string[]
   rowItem: (item: any, index: number) => JSX.Element
 }
