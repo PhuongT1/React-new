@@ -1,21 +1,20 @@
-import styleLogin from "./member-manage.module.scss"
-import http from "../../services/axios"
-import { useCallback, useEffect, useState } from "react"
-import SearchItem from "elements/search"
-import TableData from "elements/table"
-import Button from "@mui/material/Button"
-import Paginations from "elements/pagination"
-import { Page } from "../../types/page.types"
-import { Nft, optionSearch } from "./member-manage.type"
-import { TableCell } from "@mui/material"
-import { NavLink } from "react-router-dom"
-import Loading from "elements/loading"
-import CreateNft from "dialog/create-nft"
-import { useQuery } from "@tanstack/react-query"
+import styleLogin from './member-manage.module.scss'
+import http from '../../services/axios'
+import { useCallback, useEffect, useState } from 'react'
+import SearchItem from 'elements/search'
+import TableData from 'elements/table'
+import Button from '@mui/material/Button'
+import Paginations from 'elements/pagination'
+import { Page } from '../../types/page.types'
+import { Nft, optionSearch } from './member-manage.type'
+import { TableCell } from '@mui/material'
+import { NavLink } from 'react-router-dom'
+import Loading from 'elements/loading'
+import CreateNft from 'dialog/create-nft'
+import { useQuery } from '@tanstack/react-query'
 
 const NftManage = () => {
-  console.log("rendercomponent")
-  const getList = async ({ queryKey }: any) => {
+  const getList = async ({ queryKey }: { queryKey: [string, any] }) => {
     const [, param] = queryKey
     const response = await http.get<Page<Nft>>(`/admin/nfts`, {
       params: param
@@ -35,7 +34,7 @@ const NftManage = () => {
   })
 
   const { data, isLoading, error, isError } = useQuery({
-    queryKey: ["nft-manage", paramUrl],
+    queryKey: ['nft-manage', paramUrl],
     queryFn: getList,
     refetchOnWindowFocus: false
   })
@@ -53,38 +52,38 @@ const NftManage = () => {
 
   const handleClose = (value?: string) => {
     setOpen(false)
-    console.log("handleClose", value)
+    console.log('handleClose', value)
   }
 
   const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
-    { value: "search_like", label: "Search Like" },
-    { value: "name_like", label: "Name Like" },
-    { value: "id_eq", label: "Id Like" }
+    { value: 'search_like', label: 'Search Like' },
+    { value: 'name_like', label: 'Name Like' },
+    { value: 'id_eq', label: 'Id Like' }
   ])
 
   const searchData = (data: any = {}) => {
     if (!data) return
     let dataSearch = {} as any
-    dataSearch["created_at_btw"] = `${
-      data.startDay ? data.startDay.format("DD-MM-YYYY") : ""
-    }${data.endDay ? `, ${data.endDay.format("DD-MM-YYYY")} 23:59:59` : ""}`
+    dataSearch['created_at_btw'] = `${
+      data.startDay ? data.startDay.format('DD-MM-YYYY') : ''
+    }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`
     dataSearch[data.order_by] = data.search_like
     setParamUrl({ ...paramUrl, ...dataSearch })
   }
 
   const emitPage = (page: number) => {
-    console.log("page", page)
+    console.log('page', page)
     setParamUrl({ ...paramUrl, ...{ page: page } })
   }
 
   const rowheader: string[] = [
-    "STT",
-    "Registration Number",
-    "Name",
-    "Contract address",
-    "Blockchain",
-    "Token standard",
-    "More information"
+    'STT',
+    'Registration Number',
+    'Name',
+    'Contract address',
+    'Blockchain',
+    'Token standard',
+    'More information'
   ]
 
   const rowTable = (item: Nft, index: number): JSX.Element => {
@@ -98,14 +97,14 @@ const NftManage = () => {
         <TableCell align="center">{item.token_standard}</TableCell>
         <TableCell align="center">
           <Button
-            sx={{ textTransform: "none", background: "#3f51b5", padding: 0 }}
+            sx={{ textTransform: 'none', background: '#3f51b5', padding: 0 }}
             variant="contained"
           >
             <NavLink
               style={{
-                textDecoration: "none",
-                color: "white",
-                padding: "7px 15px"
+                textDecoration: 'none',
+                color: 'white',
+                padding: '7px 15px'
               }}
               to={`view-detail/id/${item.id}`}
             >
@@ -118,19 +117,19 @@ const NftManage = () => {
   }
 
   useEffect(() => {
-    console.log("useEffect")
+    console.log('useEffect')
   })
   // Render UI
   return (
-    <div className={styleLogin["layer-item"]}>
+    <div className={styleLogin['layer-item']}>
       <CreateNft open={open} onClose={handleClose} />
-      <div className={`${styleLogin["layer-content"]}`}>
+      <div className={`${styleLogin['layer-content']}`}>
         <SearchItem
           defaultSelect="name_like"
           optionSelect={optionSearch}
           emitDataSearch={searchData}
         />
-        <div className={`${styleLogin["layer-table"]}`}>
+        <div className={`${styleLogin['layer-table']}`}>
           {isLoading && <Loading />}
           <TableData
             dataheader={rowheader}
@@ -138,27 +137,27 @@ const NftManage = () => {
             data={data?.data}
           />
         </div>
-        <div className={`${styleLogin["layer-register"]}`}>
+        <div className={`${styleLogin['layer-register']}`}>
           <Button
             onClick={() => handlOpenModal()}
             sx={{
-              textTransform: "none",
-              background: "#3f51b5",
-              padding: "10px 20px"
+              textTransform: 'none',
+              background: '#3f51b5',
+              padding: '10px 20px'
             }}
             variant="contained"
           >
             Register NFT
           </Button>
         </div>
-        <div className={`${styleLogin["layer-pagination"]}`}>
+        <div className={`${styleLogin['layer-pagination']}`}>
           <Paginations
             totalPages={data?.meta?.last_page || 0}
             emitPage={emitPage}
           />
         </div>
       </div>
-      <>{console.log("redner")}</>
+      <>{console.log('redner')}</>
     </div>
   )
 }

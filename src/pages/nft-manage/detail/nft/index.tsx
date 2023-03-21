@@ -25,7 +25,9 @@ const NftDetail = () => {
 
   const getList = async ({ queryKey }: { queryKey: [string, number] }) => {
     const [_, id] = queryKey
+
     const response = await http.get<Nft>(`/admin/nft/${id}`)
+    console.log('get 1')
     return response.data
   }
 
@@ -142,7 +144,7 @@ const NftDetail = () => {
 
     Object.keys(data).map((key: string) => {
       if (key !== 'image') {
-        data[key] && formData.append(key, data[key])
+        data[key as keyof Nft] && formData.append(key, data[key as keyof Nft])
       } else {
         data[key]?.length && formData.append(key, data[key][0])
       }

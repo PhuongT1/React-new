@@ -31,7 +31,7 @@ const MemberManages = () => {
   })
 
   // useQuery in order to cache data
-  const { data, isLoading, isFetching, error, isError } = useQuery(
+  const { data, isLoading, error, isError } = useQuery(
     ['member-manage', paramUrl],
     getList
     // { staleTime: 5 * (60 * 1000), cacheTime: 5000 }
@@ -124,7 +124,7 @@ const MemberManages = () => {
           <TableData
             dataheader={rowheader}
             rowItem={rowTable}
-            data={data?.data}
+            data={data && data.data}
           />
         </div>
         <div className={`${styleLogin['layer-pagination']}`}>

@@ -10,7 +10,10 @@ import {
 import {
   Control,
   Controller,
+  FieldError,
+  FieldErrorsImpl,
   FieldValues,
+  Merge,
   UseControllerProps,
   UseFormRegister
 } from 'react-hook-form'
@@ -23,7 +26,7 @@ export interface propInputType extends InputBaseProps {
   customStyle?: string
   containerStyle?: string
   radius?: string
-  helperText?: string
+  helperText?: string | FieldError | any
   control: Control<FieldValues | any>
   register: UseFormRegister<FieldValues | any>
   name: string
@@ -67,7 +70,7 @@ const Inputs = ({
           size={size}
           error={invalid || !!helperText}
           variant="filled"
-          className={`${!label ? styles.noneLabel : ''}`}
+          className={`${!label && styles.noneLabel}`}
           sx={{
             ...sx,
             width: width
@@ -83,7 +86,7 @@ const Inputs = ({
             inputRef={inputRef}
             disabled={disabled}
             id={name}
-            //  value={typeof value === "object" ? value?.name : value}
+            // value={typeof value === "object" ? value?.name : value}
             placeholder={placeholder}
             startAdornment={startAdornment}
             endAdornment={endAdornment}
@@ -103,7 +106,7 @@ const Inputs = ({
             }: React.ChangeEvent<HTMLInputElement>) => {
               const valInput = type === 'file' ? files : value
               onChange(valInput)
-              if (onChangeHandle) onChangeHandle(valInput) // emit a function onChange
+              onChangeHandle && onChangeHandle(valInput) // emit a function onChange
             }}
             type={type}
             sx={{ height: height, borderRadius: radius }}
