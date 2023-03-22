@@ -16,10 +16,11 @@ export interface Search {
   defaultSelect: string
   optionSelect: any[]
   emitDataSearch: (value: searchForm) => void
+  children?: React.ReactNode
 }
 
 const Search = (props: Search) => {
-  const { defaultSelect, optionSelect, emitDataSearch } = props
+  const { defaultSelect, optionSelect, emitDataSearch, children } = props
   const schema = yup.object().shape({
     startDay: yup
       .date()
