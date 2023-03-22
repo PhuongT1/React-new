@@ -16,6 +16,7 @@ import { searchForm } from 'models/search.type'
 const Loading = React.lazy(() => import('elements/loading'))
 
 const MemberManages = () => {
+  // API get list data
   const getList = async ({ queryKey }: { queryKey: [string, searchPage] }) => {
     const [, param] = queryKey
     const response = await http.get<Page<Member>>(`/admin/users`, {
@@ -23,7 +24,7 @@ const MemberManages = () => {
     })
     return response.data
   }
-
+  // param url
   const [paramUrl, setParamUrl] = useState<searchPage>({
     per_page: 5,
     page: 1,
@@ -31,11 +32,10 @@ const MemberManages = () => {
   })
 
   // useQuery in order to cache data
-  const { data, isLoading, error, isError } = useQuery(
-    ['member-manage', paramUrl],
-    getList
-    // { staleTime: 5 * (60 * 1000), cacheTime: 5000 }
-  )
+  const { data, isLoading, error, isError } = useQuery({
+    queryKey: ['member-manage', paramUrl],
+    queryFn: getList
+  })
 
   const optionSearch = [
     { value: 'search_like', label: 'Search Like' },
@@ -100,7 +100,7 @@ const MemberManages = () => {
     dataSearch['created_at_btw'] = `${
       data.startDay ? data.startDay?.format('DD-MM-YYYY') : ''
     }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`
-    dataSearch[data.order_by] = data.search_like
+    dataSearch[data.order_by as keyof searchForm] = data.search_like
     setParamUrl({ ...paramUrl, ...dataSearch })
   }
 
@@ -118,7 +118,7 @@ const MemberManages = () => {
           defaultSelect="name_like"
           optionSelect={optionSearch}
           emitDataSearch={searchData}
-        />
+        ></SearchItem>
         <div className={`${styleLogin['layer-table']}`}>
           {isLoading && <Loading />}
           <TableData
@@ -128,7 +128,10 @@ const MemberManages = () => {
           />
         </div>
         <div className={`${styleLogin['layer-pagination']}`}>
-          <Paginations totalPages={data?.meta?.last_page} emitPage={emitPage} />
+          <Paginations
+            totalPages={data?.meta && data.meta.last_page}
+            emitPage={emitPage}
+          />
         </div>
       </div>
     </div>

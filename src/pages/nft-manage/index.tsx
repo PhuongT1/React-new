@@ -1,20 +1,21 @@
 import styleLogin from './member-manage.module.scss'
 import http from '../../services/axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SearchItem from 'elements/search'
 import TableData from 'elements/table'
 import Button from '@mui/material/Button'
 import Paginations from 'elements/pagination'
 import { Page } from '../../types/page.types'
-import { Nft, optionSearch } from './member-manage.type'
+import { Nft, searchItem } from './member-manage.type'
 import { TableCell } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 import Loading from 'elements/loading'
 import CreateNft from 'dialog/create-nft'
 import { useQuery } from '@tanstack/react-query'
+import { searchForm } from 'models/search.type'
 
 const NftManage = () => {
-  const getList = async ({ queryKey }: { queryKey: [string, any] }) => {
+  const getList = async ({ queryKey }: { queryKey: [string, searchItem] }) => {
     const [, param] = queryKey
     const response = await http.get<Page<Nft>>(`/admin/nfts`, {
       params: param
@@ -27,7 +28,7 @@ const NftManage = () => {
     }
   }
 
-  const [paramUrl, setParamUrl] = useState<any>({
+  const [paramUrl, setParamUrl] = useState<searchItem>({
     per_page: 15,
     page: 1,
     order_by: `desc`
@@ -43,7 +44,7 @@ const NftManage = () => {
     console.log(error)
   }
 
-  // set state for open (modal)
+  // Set state for open (modal)
   const [open, setOpen] = useState(false)
 
   const handlOpenModal = () => {
@@ -55,19 +56,19 @@ const NftManage = () => {
     console.log('handleClose', value)
   }
 
-  const [optionSearch, setoptionSearch] = useState<optionSearch[]>([
+  const optionSearch = [
     { value: 'search_like', label: 'Search Like' },
     { value: 'name_like', label: 'Name Like' },
     { value: 'id_eq', label: 'Id Like' }
-  ])
+  ]
 
-  const searchData = (data: any = {}) => {
+  const searchData = (data: searchForm) => {
     if (!data) return
-    let dataSearch = {} as any
+    let dataSearch = {} as searchItem
     dataSearch['created_at_btw'] = `${
       data.startDay ? data.startDay.format('DD-MM-YYYY') : ''
     }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`
-    dataSearch[data.order_by] = data.search_like
+    dataSearch[data.order_by as keyof searchForm] = data.search_like
     setParamUrl({ ...paramUrl, ...dataSearch })
   }
 

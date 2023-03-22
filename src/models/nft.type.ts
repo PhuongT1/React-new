@@ -5,7 +5,7 @@ export interface Nft {
   contract_address: string
   block_chain: string
   token_standard: string | any
-  image: FileList | null | any
-  imageName?: string
+  image: File[] | string
+  imageName: File[] | string
   type: number
 }

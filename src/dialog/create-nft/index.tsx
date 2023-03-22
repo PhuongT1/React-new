@@ -55,7 +55,7 @@ const CreateNft = (props: NftProps) => {
       token_standard: '',
       name: '',
       contract_address: '',
-      image: {},
+      image: '',
       imageName: ''
     },
     mode: 'onTouched',
@@ -185,7 +185,8 @@ const CreateNft = (props: NftProps) => {
                 name="image"
                 onChange={(e) => {
                   onChange(e)
-                  setValue('imageName', getValues().image[0]?.name)
+                  const file = getValues().image[0] as File
+                  setValue('imageName', file && file.name)
                   trigger('image')
                 }}
               />

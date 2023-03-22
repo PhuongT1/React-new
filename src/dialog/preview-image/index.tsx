@@ -3,7 +3,7 @@ import style from './preview-image.module.scss'
 // interface for Props
 export interface Preview {
   open: boolean
-  imageUrl?: string
+  imageUrl?: string | File[] | File
   onClose: () => void
 }
 
@@ -15,7 +15,7 @@ const PreviewImage = (props: Preview) => {
       <DialogContent>
         <img
           className={`${style['img-item']}`}
-          src={imageUrl}
+          src={imageUrl as string}
           alt="Preview image"
         />
       </DialogContent>

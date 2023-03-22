@@ -13,7 +13,7 @@ import { useMutation } from '@tanstack/react-query'
 import { Token } from 'services/token.service'
 import { useEffect } from 'react'
 
-const Login = (props: any) => {
+const Login = () => {
   const navigate = useNavigate()
 
   // validate with yup
@@ -45,7 +45,7 @@ const Login = (props: any) => {
     setError
   } = form
 
-  const token = (dataToken?: any) => {
+  const tokenType = (dataToken?: any) => {
     return {
       type: 'saveToken',
       data: dataToken

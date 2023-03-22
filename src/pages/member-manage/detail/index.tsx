@@ -1,13 +1,11 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-const Loading = React.lazy(() => import("elements/loading"));
+import { useParams } from 'react-router-dom'
 
-const DetailMember = (route: any) => {
-    const { id } = useParams();
-    return (
-        <>
-            <p>detail member with id {id}</p>
-        </>
-    );
-};
-export default DetailMember;
+const DetailMember = () => {
+  const { id } = useParams()
+  return (
+    <>
+      <p>detail member with id {id}</p>
+    </>
+  )
+}
+export default DetailMember

@@ -13,9 +13,10 @@ import Select from 'elements/select'
 import Loading from 'elements/loading'
 import { convertName } from 'services/common.service'
 import PreviewImage from 'dialog/preview-image'
+
 const NftDetail = () => {
   const { id } = useParams()
-  const inputUpload = useRef<any>(null)
+  const inputUpload = useRef<HTMLInputElement>(null)
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [isStatusEdit, setStatusEdit] = useState<boolean>(() => false)
   const optionSearch = [
@@ -25,10 +26,8 @@ const NftDetail = () => {
 
   const getList = async ({ queryKey }: { queryKey: [string, number] }) => {
     const [_, id] = queryKey
-
-    const response = await http.get<Nft>(`/admin/nft/${id}`)
-    console.log('get 1')
-    return response.data
+    const response = await http.get(`/admin/nft/${id}`)
+    return response.data as Nft
   }
 
   const updateNft = async (dataForm: FormData) => {
@@ -69,21 +68,19 @@ const NftDetail = () => {
     image: yup
       .mixed()
       .nullable()
-      .test('fileSize', 'File Size is too large', (value: any) => {
-        if (!value?.length) {
+      .test('fileSize', 'File Size is too large', (value) => {
+        const val = value as FileList
+        if (!val.length) {
           return true
         }
-        const size = value?.length && value[0].size < 5242880
-        return size
+        return val[0].size < 5242880 ? true : false
       })
-      .test('fileType', 'Unsupported File Format', (value: any) => {
-        if (!value?.length) {
+      .test('fileType', 'Unsupported File Format', (value) => {
+        const val = value as FileList
+        if (!val?.length) {
           return true
         }
-        return (
-          value?.length &&
-          ['image/jpeg', 'image/png', 'image/jpg'].includes(value[0]?.type)
-        )
+        return ['image/jpeg', 'image/png', 'image/jpg'].includes(val[0]?.type)
       })
   })
 
@@ -93,8 +90,8 @@ const NftDetail = () => {
       block_chain: '이더리움',
       token_standard: '',
       name: '',
+      image: '',
       contract_address: '',
-      image: null,
       imageName: ''
     },
     mode: 'onTouched',
@@ -305,7 +302,7 @@ const NftDetail = () => {
               />
               <Button
                 onClick={() => {
-                  inputUpload.current.click()
+                  inputUpload.current && inputUpload.current.click()
                 }}
                 sx={{
                   textTransform: 'none',
@@ -327,7 +324,7 @@ const NftDetail = () => {
     <div className={`${style['row-nft']}`}>
       <PreviewImage
         open={openModal}
-        imageUrl={data?.image}
+        imageUrl={data && data.image}
         onClose={() => setOpenModal(false)}
       />
       {(isLoading || isLoadingEdit) && <Loading />}
