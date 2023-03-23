@@ -1,5 +1,5 @@
 export interface listTable<T> {
   data?: T[]
   dataheader: string[]
-  rowItem: (item: any, index: number) => React.ReactNode
+  rowItem: (item: T, index: number) => React.ReactNode
 }

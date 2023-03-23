@@ -4,36 +4,42 @@ import {
   InputLabel,
   FilledInput,
   FormHelperText,
-  InputBase,
-  InputBaseProps
+  InputBaseProps,
+  TextFieldProps
 } from '@mui/material'
 import {
   Control,
   Controller,
   FieldError,
-  FieldErrorsImpl,
+  FieldPath,
+  FieldPathByValue,
   FieldValues,
-  Merge,
   UseControllerProps,
   UseFormRegister
 } from 'react-hook-form'
 import styles from './input.module.scss'
 
-export interface propInputType extends InputBaseProps {
+export interface InputElementProps<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+> extends InputBaseProps {
   label?: string
   height?: string
   width?: string
   customStyle?: string
   containerStyle?: string
   radius?: string
-  helperText?: string | FieldError | any
-  control: Control<FieldValues | any>
-  register: UseFormRegister<FieldValues | any>
-  name: string
+  helperText?: string
+  control: Control<TFieldValues>
+  register: UseFormRegister<TFieldValues>
+  name: TName
   onChangeHandle?: (value: any) => void
 }
 
-const Inputs = ({
+const Inputs = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+>({
   label,
   name,
   control,
@@ -57,7 +63,7 @@ const Inputs = ({
   readOnly,
   onChangeHandle,
   sx
-}: propInputType) => {
+}: InputElementProps<TFieldValues, TName>) => {
   return (
     <Controller
       name={name}

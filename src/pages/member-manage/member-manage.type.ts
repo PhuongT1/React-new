@@ -1,5 +1,5 @@
+import { ParamPage } from 'models/common.type'
 import { searchForm } from 'models/search.type'
-import { string } from 'yup'
 
 export interface Member {
   id: number
@@ -8,14 +8,6 @@ export interface Member {
   created_at: any
   status: number
 }
-
-export interface optionSearch {
-  value: string
-  label: string
-}
-
-export interface searchPage extends searchForm {
-  per_page?: number
-  page?: number
+export interface searchPage extends searchForm, ParamPage {
   created_at_btw?: string
 }

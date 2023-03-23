@@ -1,9 +1,9 @@
-import style from "./spagination.module.scss"
-import Pagination from "@mui/material/Pagination"
-import Stack from "@mui/material/Stack"
-import { PaginationItem } from "@mui/material"
-import ArrowBackIcon from "@mui/icons-material/ArrowBack"
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+import style from './spagination.module.scss'
+import Pagination from '@mui/material/Pagination'
+import Stack from '@mui/material/Stack'
+import { PaginationItem } from '@mui/material'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 interface PaginationsProps {
   totalPages?: number
   emitPage: (page: number) => void

@@ -8,16 +8,20 @@ import * as yup from 'yup'
 import Input from 'elements/Input/index'
 import Loading from 'elements/loading'
 import { connect } from 'react-redux'
-import { errorRespond, User } from './login.type'
+import { ErrorRespond, User } from './login.type'
 import { useMutation } from '@tanstack/react-query'
 import { Token } from 'services/token.service'
 import { useEffect } from 'react'
 
 const Login = () => {
   const navigate = useNavigate()
-
-  // validate with yup
-  const schema = yup.object().shape({
+  // const test: ErrorRespondsss = {
+  //   email: 'ghhjgj',
+  //   password: '',
+  //   passwordtest: 56756756
+  // }
+  // Validate with yup
+  const schemaLogin = yup.object().shape({
     email: yup
       .string()
       .required('Vui lòng nhập email.')
@@ -34,7 +38,7 @@ const Login = () => {
   const form = useForm<User>({
     defaultValues: { email: 'admin2@test.com', password: 'Abcd1234@' },
     mode: 'onTouched',
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schemaLogin)
   })
 
   const {
@@ -45,12 +49,12 @@ const Login = () => {
     setError
   } = form
 
-  const tokenType = (dataToken?: any) => {
-    return {
-      type: 'saveToken',
-      data: dataToken
-    }
-  }
+  // const tokenType = (dataToken?: any) => {
+  //   return {
+  //     type: 'saveToken',
+  //     data: dataToken
+  //   }
+  // }
 
   const postData = (data: User) => {
     const response = http.post<Token>(`/login`, data)
@@ -61,7 +65,7 @@ const Login = () => {
     onSuccess: (response) => {
       localStorage.setItem('user', JSON.stringify(response.data))
       navigate('/admin/member-manage', {
-        state: { test: 'phuong tran testing' }
+        state: { test: 'testing' }
       })
     }
     // onError: (error: any) => {
@@ -70,12 +74,12 @@ const Login = () => {
   })
 
   useEffect(() => {
-    const errors = error as errorRespond
+    const errors = error as ErrorRespond
     if (errors) {
       setError(errors.error_field, { message: errors?.message })
     }
   })
-
+  // Submit form
   const handleSubmitForm = (data: User) => {
     mutate(data)
   }
