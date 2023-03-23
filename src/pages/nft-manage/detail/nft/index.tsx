@@ -271,7 +271,6 @@ const NftDetail = () => {
             <span className={`${style['row-content']}`}>
               <Select
                 option={optionSearch}
-                menuItem={menuItem}
                 register={register}
                 name="token_standard"
                 control={control}

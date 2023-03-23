@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, MenuItem } from '@mui/material'
+import { Button } from '@mui/material'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Nft } from 'models/nft.type'
 import { useEffect, useRef, useState } from 'react'
@@ -15,28 +15,17 @@ import { Mission, Missions } from 'models/mission.type'
 import { convertName } from 'services/common.service'
 import PreviewImage from 'dialog/preview-image'
 import Select from 'elements/select'
-type optionSearch = {
-  value: number
-  label: string
-}
+import { OptionDropdow } from 'models/common.type'
+
 const MonthlyQuest = () => {
   const { id } = useParams()
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [imageUrl, setImageUrl] = useState<string>('')
   const inputFiles = useRef<any>([])
-  const optionSearch: optionSearch[] = [
+  const optionSearch: OptionDropdow[] = [
     { value: 1, label: 'ERC-721' },
     { value: 2, label: 'ERC-1155' }
   ]
-
-  // Render option of select
-  const menuItem = (item: optionSearch, index?: number): JSX.Element => {
-    return (
-      <>
-        <MenuItem value={item.value}>{item.label}</MenuItem>
-      </>
-    )
-  }
 
   const getList = async ({ queryKey }: { queryKey: [string, number] }) => {
     const [_, id] = queryKey
@@ -254,7 +243,6 @@ const MonthlyQuest = () => {
           <span>
             <Select
               option={optionSearch}
-              menuItem={menuItem}
               register={register}
               name={`missions.${index}.type`}
               control={control}

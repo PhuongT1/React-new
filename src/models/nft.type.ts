@@ -6,6 +6,6 @@ export interface Nft {
   block_chain: string
   token_standard: string | any
   image: File[] | string
-  imageName: File[] | string
+  imageName: string
   type: number
 }

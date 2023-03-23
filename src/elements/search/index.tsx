@@ -10,6 +10,7 @@ import Inputs from '../Input'
 import { MenuItem } from '@mui/material'
 import moment from 'moment'
 import { searchForm } from 'models/search.type'
+import { OptionDropdow } from 'models/common.type'
 
 // Model of search props
 export interface Search {
@@ -67,7 +68,7 @@ const Search = (props: Search) => {
     getValues
   } = form
 
-  const menuItem = (item?: any, index?: number): JSX.Element => {
+  const menuItem = (item: OptionDropdow): JSX.Element => {
     return (
       <>
         <MenuItem value={item.value}>{item.label}</MenuItem>
@@ -75,6 +76,7 @@ const Search = (props: Search) => {
     )
   }
 
+  const menuItem2 = (item: OptionDropdow, item2: string) => {}
   return (
     <div className={style['layer-item']}>
       <form>
@@ -106,12 +108,13 @@ const Search = (props: Search) => {
         <div className={style['search-item']}>
           <Select
             option={optionSelect}
-            menuItem={menuItem}
             label="Choose a option"
             width={'175px'}
             register={register}
             name="order_by"
             control={control}
+            menuItem2={menuItem2}
+            menuItem={menuItem}
           />
           <Inputs
             label="Search"

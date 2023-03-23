@@ -16,7 +16,7 @@ import { searchForm } from 'models/search.type'
 const Loading = React.lazy(() => import('elements/loading'))
 
 const MemberManages = () => {
-  // API get list data
+  // API Get list data
   const getList = async ({ queryKey }: { queryKey: [string, searchPage] }) => {
     const [, param] = queryKey
     const response = await http.get<Page<Member>>(`/admin/users`, {
@@ -24,7 +24,8 @@ const MemberManages = () => {
     })
     return response.data
   }
-  // param url
+
+  // Param url
   const [paramUrl, setParamUrl] = useState<searchPage>({
     per_page: 5,
     page: 1,
