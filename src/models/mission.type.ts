@@ -16,7 +16,6 @@ export interface Mission {
   statusEdit?: boolean
   statusAdd?: boolean
 }
-
 export interface Missions {
   missions: Mission[]
 }

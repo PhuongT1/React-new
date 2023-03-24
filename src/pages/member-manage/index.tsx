@@ -17,7 +17,11 @@ const Loading = React.lazy(() => import('elements/loading'))
 
 const MemberManages = () => {
   // API Get list data
-  const getList = async ({ queryKey }: { queryKey: [string, searchPage] }) => {
+  const getMemberList = async ({
+    queryKey
+  }: {
+    queryKey: [string, searchPage]
+  }) => {
     const [, param] = queryKey
     const response = await http.get<Page<Member>>(`/admin/users`, {
       params: param
@@ -35,7 +39,7 @@ const MemberManages = () => {
   // useQuery in order to cache data
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ['member-manage', paramUrl],
-    queryFn: getList
+    queryFn: getMemberList
   })
 
   const optionSearch = [
@@ -58,7 +62,7 @@ const MemberManages = () => {
   ]
 
   // Render UI for row table
-  const rowTable = (item: Member, _index?: number): JSX.Element => {
+  const rowTable = (item: Member, _index?: number) => {
     return (
       <>
         <TableCell align="center">{item.id}</TableCell>
