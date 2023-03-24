@@ -1,11 +1,16 @@
 export interface Nft {
-  nft_id: number
   id?: number
+  nft_id: number
   name: string
+  verification_code: any
   contract_address: string
+  token_standard: string
   block_chain: string
-  token_standard: string | any
   image: File[] | string
+  created_at: string
+  updated_at: string
+  deleted_at: any
+  created_by: number
   imageName: string
-  type: number
+  deleted_by: any
 }

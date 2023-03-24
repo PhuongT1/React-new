@@ -11,8 +11,7 @@ import Select from 'elements/select'
 import http from 'services/axios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Loading from 'elements/loading'
-import { CreateNftProps, ErrorRespond } from './create-nft.type'
-import { OptionDropdow } from 'models/common.type'
+import { CreateNftProps, ErrorRespond, NftForm } from './create-nft.type'
 
 const CreateNft = (props: CreateNftProps) => {
   const { onClose, open } = props
@@ -30,19 +29,19 @@ const CreateNft = (props: CreateNftProps) => {
     image: yup
       .mixed()
       .test('required', 'photo is required', (value) => {
-        const file = value as FileList
-        if (!file || file.length > 0) return true
-        return false
-      })
-      .test('fileSize', 'File Size is too large', (value) => {
-        const file = value as FileList
-        if (!file) return true
-        return file[0]?.size <= 5242880
+        console.log('hehe required', value)
+        if (!value) return false
+        return true
       })
       .test('fileType', 'Unsupported File Format', (value) => {
         const file = value as FileList
         if (!file) return true
         return ['image/jpeg', 'image/png', 'image/jpg'].includes(file[0]?.type)
+      })
+      .test('fileSize', 'File Size is too large', (value) => {
+        const file = value as FileList
+        if (!file) return true
+        return file[0]?.size <= 5242880
       })
   })
 
@@ -99,21 +98,23 @@ const CreateNft = (props: CreateNftProps) => {
   })
 
   // Render option of select
-  const menuItem = (item: OptionDropdow): JSX.Element => {
-    return (
-      <>
-        <MenuItem value={item.value}>{item.label}</MenuItem>
-      </>
-    )
-  }
+  // const menuItem = (item: OptionDropdow): JSX.Element => {
+  //   return (
+  //     <>
+  //       <MenuItem value={item.value}>{item.label}</MenuItem>
+  //     </>
+  //   )
+  // }
 
-  const setDataForm = (data: Nft) => {
+  const setDataForm = (dataForm: Nft) => {
     const formData: FormData = new FormData()
-    formData.append('name', data.name)
-    formData.append('contract_address', data.contract_address)
-    formData.append('token_standard', data.token_standard)
-    formData.append('block_chain', data.block_chain)
-    formData.append('image', data?.image[0])
+    const { name, contract_address, token_standard, block_chain, image } =
+      dataForm
+    formData.append('name', name)
+    formData.append('contract_address', contract_address)
+    formData.append('token_standard', token_standard)
+    formData.append('block_chain', block_chain)
+    formData.append('image', image[0])
 
     // submit data to form
     mutate(formData)
@@ -225,7 +226,6 @@ const CreateNft = (props: CreateNftProps) => {
             type="submit"
             autoFocus
             onClick={async () => {
-              console.log('getValues', getValues())
               await trigger()
             }}
           >
@@ -237,9 +237,4 @@ const CreateNft = (props: CreateNftProps) => {
   )
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    state: state
-  }
-}
 export default CreateNft

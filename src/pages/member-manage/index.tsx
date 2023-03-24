@@ -6,7 +6,7 @@ import TableData from 'elements/table'
 import Button from '@mui/material/Button'
 import Paginations from 'elements/pagination'
 import { Page } from 'types/page.types'
-import { Member, searchPage } from './member-manage.type'
+import { Member, SearchMember } from './member-manage.type'
 import moment from 'moment'
 import { TableCell } from '@mui/material'
 import React from 'react'
@@ -20,7 +20,7 @@ const MemberManages = () => {
   const getMemberList = async ({
     queryKey
   }: {
-    queryKey: [string, searchPage]
+    queryKey: [string, SearchMember]
   }) => {
     const [, param] = queryKey
     const response = await http.get<Page<Member>>(`/admin/users`, {
@@ -30,7 +30,7 @@ const MemberManages = () => {
   }
 
   // Param url
-  const [paramUrl, setParamUrl] = useState<searchPage>({
+  const [paramUrl, setParamUrl] = useState<SearchMember>({
     per_page: 5,
     page: 1,
     order_by: 'id desc'
@@ -101,7 +101,7 @@ const MemberManages = () => {
 
   const searchData = (data: searchForm) => {
     if (!data) return
-    let dataSearch = {} as searchPage
+    let dataSearch = {} as SearchMember
     dataSearch['created_at_btw'] = `${
       data.startDay ? data.startDay?.format('DD-MM-YYYY') : ''
     }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`

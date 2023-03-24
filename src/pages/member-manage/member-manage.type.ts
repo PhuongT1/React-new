@@ -8,6 +8,6 @@ export interface Member {
   created_at: any
   status: number
 }
-export interface searchPage extends searchForm, ParamPage {
+export interface SearchMember extends searchForm, ParamPage {
   created_at_btw?: string
 }

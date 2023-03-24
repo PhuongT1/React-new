@@ -1,21 +1,11 @@
+import { ParamPage } from 'models/common.type'
 import { searchForm } from 'models/search.type'
-
-export interface Nft {
-  id: number
-  name: string
-  contract_address: string
-  block_chain: string
-  token_standard: string
-}
-
-export interface optionSearch {
+export interface OptionSearch {
   value: string
   label: string
 }
 
-export interface searchItem extends searchForm {
-  per_page: number
-  page: number
+export interface NftSearchItem extends searchForm, ParamPage {
   order_by: string
   created_at_btw?: string
 }
