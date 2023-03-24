@@ -31,16 +31,18 @@ const CreateNft = (props: CreateNftProps) => {
       .mixed()
       .test('required', 'photo is required', (value) => {
         const file = value as FileList
-        if (file?.length > 0) return true
+        if (!file || file.length > 0) return true
         return false
       })
       .test('fileSize', 'File Size is too large', (value) => {
         const file = value as FileList
+        if (!file) return true
         return file[0]?.size <= 5242880
       })
       .test('fileType', 'Unsupported File Format', (value) => {
         const file = value as FileList
-        return ['image/jpeg', 'image/png', 'image/jpg'].includes(file[0].type)
+        if (!file) return true
+        return ['image/jpeg', 'image/png', 'image/jpg'].includes(file[0]?.type)
       })
   })
 

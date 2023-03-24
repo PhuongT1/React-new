@@ -33,23 +33,24 @@ const MonthlyQuest = () => {
     return { data: response.data } as Page<Mission>
   }
 
-  const updateNft = async (data: Mission | Omit<Mission, 'id'>) => {
-    const response = await http.post<Mission>(
-      `/admin/mission/${data.idTmp}`,
-      data
-    )
+  const updateNft = async (
+    data: Pick<Mission, 'description' | 'type' | 'image' | 'id'>
+  ) => {
+    const response = await http.post<Mission>(`/admin/mission/${data.id}`, data)
     return response.data
   }
 
-  const addMissionAPI = async (dataPost: Omit<Mission, 'id'>) => {
+  const addMissionAPI = async (
+    dataPost: Pick<Mission, 'description' | 'type' | 'image'>
+  ) => {
     const formData: FormData = new FormData()
-
-    Object.keys(dataPost).map((key: string) => {
-      formData.append(key, dataPost[key as keyof Omit<Mission, 'id'>])
+    // Add data to formData
+    Object.keys(dataPost).map((key) => {
+      formData.append(
+        key,
+        dataPost[key as keyof Pick<Mission, 'description' | 'type' | 'image'>]
+      )
     })
-    // formData.append('image', dataPost['image'])
-    // formData.append('description', dataPost['description'])
-    // formData.append('type', dataPost['type'])
     const response = await http.post<Nft>(`admin/mission/nft/${id}`, formData)
     return response.data
   }
@@ -93,7 +94,11 @@ const MonthlyQuest = () => {
     error: errorAdd,
     isLoading: isLoadingAdd,
     mutateAsync: mutateAddAsync
-  } = useMutation(addMissionAPI)
+  } = useMutation(addMissionAPI, {
+    onSuccess: (data, variables, context) => {
+      console.log('item')
+    }
+  })
 
   // validate form with yub
   const schema = yup.object().shape({
@@ -102,21 +107,23 @@ const MonthlyQuest = () => {
         description: yup.string().required('Please input a type'),
         image: yup
           .mixed()
-          .required('Please select image')
-          .test('fileSize', 'File Size is too large', (value: any) => {
-            if (!value?.length) {
-              return true
-            }
-            const size = value?.length && value[0].size < 5242880
-            return size
+          .test('required', 'Please select image', (value) => {
+            return !value ? false : true
           })
-          .test('fileType', 'Unsupported File Format', (value: any) => {
-            if (!value?.length) {
+          .test('fileSize', 'File Size is too large', (value) => {
+            const file = value as FileList
+            if (typeof value == 'string') {
               return true
             }
-            return (
-              value?.length &&
-              ['image/jpeg', 'image/png', 'image/jpg'].includes(value[0]?.type)
+            return file[0].size < 5242880
+          })
+          .test('fileType', 'Unsupported File Format', (value) => {
+            const file = value as FileList
+            if (typeof value == 'string') {
+              return true
+            }
+            return ['image/jpeg', 'image/png', 'image/jpg'].includes(
+              file[0]?.type
             )
           })
       })
@@ -186,7 +193,7 @@ const MonthlyQuest = () => {
     return (
       <>
         <div className={`${style['row-content']}`}>
-          <span>{quest.idTmp}</span>
+          <span>{index + 1}</span>
           <span>{optionSearch[(quest.type || 1) - 1]?.label}</span>
           <span>{quest.description}</span>
           <span>
@@ -239,7 +246,7 @@ const MonthlyQuest = () => {
     return (
       <>
         <div className={`${style['row-content']}`}>
-          <span>{quest.idTmp}</span>
+          <span>{index + 1}</span>
           <span>
             <Select
               option={optionSearch}
@@ -270,7 +277,8 @@ const MonthlyQuest = () => {
               width={'100%'}
               control={control}
               helperText={
-                errors?.missions && errors?.missions[index]?.image?.message
+                errors?.missions &&
+                (errors?.missions[index]?.image?.message as string)
               }
             />
             <Inputs
@@ -288,7 +296,6 @@ const MonthlyQuest = () => {
                   ...getValues().missions[index],
                   imageName: file[0]?.name
                 })
-                // setValue(`missions.${index}.imageName`, file[0]?.name)
                 trigger(`missions.${index}.image`)
               }}
             />
@@ -322,8 +329,10 @@ const MonthlyQuest = () => {
                     ...rest,
                     image: getValues().missions[index].image[0]
                   }
-                  !rest.statusAdd && mutateAsync(dataPost)
-                  rest.statusAdd && mutateAddAsync(dataPost)
+                  const { type, description, image, idTmp } = dataPost
+                  !rest.statusAdd &&
+                    mutateAsync({ type, description, image, id: idTmp })
+                  rest.statusAdd && mutateAddAsync({ type, description, image })
                 }
               }}
               sx={{

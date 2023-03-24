@@ -4,17 +4,14 @@ import {
   InputLabel,
   FilledInput,
   FormHelperText,
-  InputBaseProps,
-  TextFieldProps
+  InputBaseProps
 } from '@mui/material'
 import {
   Control,
   Controller,
   FieldError,
   FieldPath,
-  FieldPathByValue,
   FieldValues,
-  UseControllerProps,
   UseFormRegister
 } from 'react-hook-form'
 import styles from './input.module.scss'
@@ -29,7 +26,7 @@ export interface InputElementProps<
   customStyle?: string
   containerStyle?: string
   radius?: string
-  helperText?: string
+  helperText?: React.ReactNode
   control: Control<TFieldValues>
   register: UseFormRegister<TFieldValues>
   name: TName
@@ -52,7 +49,6 @@ const Inputs = <
   customStyle = '',
   onKeyDown,
   placeholder,
-  containerStyle = '',
   radius = '',
   disabled,
   register,
