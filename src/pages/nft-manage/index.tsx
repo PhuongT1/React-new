@@ -6,16 +6,21 @@ import TableData from 'elements/table'
 import Button from '@mui/material/Button'
 import Paginations from 'elements/pagination'
 import { Page } from '../../types/page.types'
-import { Nft, searchItem } from './member-manage.type'
 import { TableCell } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 import Loading from 'elements/loading'
 import CreateNft from 'dialog/create-nft'
 import { useQuery } from '@tanstack/react-query'
 import { searchForm } from 'models/search.type'
+import { Nft } from 'models/nft.type'
+import { NftSearchItem } from './member-manage.type'
 
 const NftManage = () => {
-  const getList = async ({ queryKey }: { queryKey: [string, searchItem] }) => {
+  const getNftList = async ({
+    queryKey
+  }: {
+    queryKey: [string, NftSearchItem]
+  }) => {
     const [, param] = queryKey
     const response = await http.get<Page<Nft>>(`/admin/nfts`, {
       params: param
@@ -28,7 +33,7 @@ const NftManage = () => {
     }
   }
 
-  const [paramUrl, setParamUrl] = useState<searchItem>({
+  const [paramUrl, setParamUrl] = useState<NftSearchItem>({
     per_page: 15,
     page: 1,
     order_by: `desc`
@@ -36,7 +41,7 @@ const NftManage = () => {
 
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ['nft-manage', paramUrl],
-    queryFn: getList,
+    queryFn: getNftList,
     refetchOnWindowFocus: false
   })
 
@@ -64,7 +69,7 @@ const NftManage = () => {
 
   const searchData = (data: searchForm) => {
     if (!data) return
-    let dataSearch = {} as searchItem
+    let dataSearch = {} as NftSearchItem
     dataSearch['created_at_btw'] = `${
       data.startDay ? data.startDay.format('DD-MM-YYYY') : ''
     }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`
@@ -120,6 +125,7 @@ const NftManage = () => {
   useEffect(() => {
     console.log('useEffect')
   })
+
   // Render UI
   return (
     <div className={styleLogin['layer-item']}>
@@ -158,7 +164,6 @@ const NftManage = () => {
           />
         </div>
       </div>
-      <>{console.log('redner')}</>
     </div>
   )
 }
