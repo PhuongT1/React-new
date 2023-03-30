@@ -1,59 +1,62 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Button } from '@mui/material'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Nft } from 'models/nft.type'
-import { useEffect, useRef, useState } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
-import http from 'services/axios'
-import style from './monthly-quest.module.scss'
-import * as yup from 'yup'
-import Inputs from 'elements/Input'
-import Loading from 'elements/loading'
-import { Page } from 'types/page.types'
-import { Mission, Missions } from 'models/mission.type'
-import { convertName } from 'services/common.service'
-import PreviewImage from 'dialog/preview-image'
-import Select from 'elements/select'
-import { OptionDropdow } from 'models/common.type'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button } from '@mui/material';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Nft } from 'models/nft.type';
+import { useEffect, useRef, useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
+import http from 'services/axios';
+import style from './monthly-quest.module.scss';
+import * as yup from 'yup';
+import Inputs from 'elements/Input';
+import Loading from 'elements/loading';
+import { Page } from 'types/page.types';
+import { Mission, Missions } from 'models/mission.type';
+import { convertName } from 'services/common.service';
+import PreviewImage from 'dialog/preview-image';
+import Select from 'elements/select';
+import { OptionDropdow } from 'models/common.type';
 
 const MonthlyQuest = () => {
-  const { id } = useParams()
-  const [openModal, setOpenModal] = useState<boolean>(false)
-  const [imageUrl, setImageUrl] = useState<string>('')
-  const inputFiles = useRef<any>([])
+  const { id } = useParams();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const inputFiles = useRef<any>([]);
   const optionSearch: OptionDropdow[] = [
     { value: 1, label: 'ERC-721' },
     { value: 2, label: 'ERC-1155' }
-  ]
+  ];
 
   const getList = async ({ queryKey }: { queryKey: [string, number] }) => {
-    const [_, id] = queryKey
-    const response = await http.get(`admin/missions/nft/${id}`)
-    return { data: response.data } as Page<Mission>
-  }
+    const [_, id] = queryKey;
+    const response = await http.get(`admin/missions/nft/${id}`);
+    return { data: response.data } as Page<Mission>;
+  };
 
   const updateNft = async (
     data: Pick<Mission, 'description' | 'type' | 'image' | 'id'>
   ) => {
-    const response = await http.post<Mission>(`/admin/mission/${data.id}`, data)
-    return response.data
-  }
+    const response = await http.post<Mission>(
+      `/admin/mission/${data.id}`,
+      data
+    );
+    return response.data;
+  };
 
   const addMissionAPI = async (
     dataPost: Pick<Mission, 'description' | 'type' | 'image'>
   ) => {
-    const formData: FormData = new FormData()
+    const formData: FormData = new FormData();
     // Add data to formData
     Object.keys(dataPost).map((key) => {
       formData.append(
         key,
         dataPost[key as keyof Pick<Mission, 'description' | 'type' | 'image'>]
-      )
-    })
-    const response = await http.post<Nft>(`admin/mission/nft/${id}`, formData)
-    return response.data
-  }
+      );
+    });
+    const response = await http.post<Nft>(`admin/mission/nft/${id}`, formData);
+    return response.data;
+  };
 
   // useQuery in order to cache data
   const { data, isLoading } = useQuery(
@@ -62,10 +65,10 @@ const MonthlyQuest = () => {
     {
       refetchOnWindowFocus: false
     }
-  )
+  );
 
   // useMutation to cache data and post data to server
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const {
     data: dataEdit,
@@ -74,20 +77,20 @@ const MonthlyQuest = () => {
     mutateAsync
   } = useMutation(updateNft, {
     onSuccess: (dataEdit) => {
-      dataEdit.nft_id = Number(dataEdit.nft_id)
-      dataEdit.type = Number(dataEdit.type)
+      dataEdit.nft_id = Number(dataEdit.nft_id);
+      dataEdit.type = Number(dataEdit.type);
       const dataCache = queryClient.getQueryData([
         'admin/missions/nft',
         Number(id)
-      ]) as Page<Mission>
-      const index = dataCache.data.findIndex((item) => item.id == dataEdit.id) // find index
-      dataCache.data[index] = dataEdit // overrise data
+      ]) as Page<Mission>;
+      const index = dataCache.data.findIndex((item) => item.id == dataEdit.id); // find index
+      dataCache.data[index] = dataEdit; // overrise data
       // Update cache
       queryClient.setQueryData(['admin/missions/nft', Number(id)], {
         data: [...dataCache.data]
-      })
+      });
     }
-  })
+  });
 
   const {
     data: dataAdd,
@@ -96,9 +99,9 @@ const MonthlyQuest = () => {
     mutateAsync: mutateAddAsync
   } = useMutation(addMissionAPI, {
     onSuccess: (data, variables, context) => {
-      console.log('item')
+      console.log('item');
     }
-  })
+  });
 
   // validate form with yub
   const schema = yup.object().shape({
@@ -108,27 +111,27 @@ const MonthlyQuest = () => {
         image: yup
           .mixed()
           .test('required', 'Please select image', (value) => {
-            return !value ? false : true
+            return !value ? false : true;
           })
           .test('fileSize', 'File Size is too large', (value) => {
-            const file = value as FileList
+            const file = value as FileList;
             if (typeof value == 'string') {
-              return true
+              return true;
             }
-            return file[0].size < 5242880
+            return file[0].size < 5242880;
           })
           .test('fileType', 'Unsupported File Format', (value) => {
-            const file = value as FileList
+            const file = value as FileList;
             if (typeof value == 'string') {
-              return true
+              return true;
             }
             return ['image/jpeg', 'image/png', 'image/jpg'].includes(
               file[0]?.type
-            )
+            );
           })
       })
     )
-  })
+  });
 
   const form = useForm<Missions>({
     defaultValues: {
@@ -136,7 +139,7 @@ const MonthlyQuest = () => {
     },
     mode: 'onTouched',
     resolver: yupResolver(schema)
-  })
+  });
 
   const {
     register,
@@ -147,16 +150,16 @@ const MonthlyQuest = () => {
     formState: { errors },
     setError,
     getValues
-  } = form
+  } = form;
 
   const { append, fields, update, remove } = useFieldArray({
     control,
     name: 'missions'
-  })
+  });
 
   useEffect(() => {
     if (data) {
-      remove()
+      remove();
       data.data &&
         data.data.map((item) =>
           append({
@@ -165,9 +168,9 @@ const MonthlyQuest = () => {
             idTmp: item.id,
             imageName: item.image
           })
-        )
+        );
     }
-  }, [data])
+  }, [data]);
 
   const addMission = () => {
     append(
@@ -186,8 +189,8 @@ const MonthlyQuest = () => {
         type: 1
       },
       { shouldFocus: false }
-    )
-  }
+    );
+  };
 
   const viewQuest = (quest: Mission, index: number) => {
     return (
@@ -200,8 +203,8 @@ const MonthlyQuest = () => {
             {convertName(quest.imageName)}
             <Button
               onClick={() => {
-                setOpenModal(true)
-                setImageUrl(quest.imageName || '')
+                setOpenModal(true);
+                setImageUrl(quest.imageName || '');
               }}
               sx={{
                 textTransform: 'none',
@@ -216,7 +219,7 @@ const MonthlyQuest = () => {
           <span>
             <Button
               onClick={() => {
-                update(index, { ...quest, statusEdit: true })
+                update(index, { ...quest, statusEdit: true });
               }}
               sx={{
                 textTransform: 'none',
@@ -239,9 +242,9 @@ const MonthlyQuest = () => {
           </span>
         </div>
       </>
-    )
-  }
-  console.log('errors', errors)
+    );
+  };
+  console.log('errors', errors);
   const editQuest = (quest: Mission, index: number) => {
     return (
       <>
@@ -295,8 +298,8 @@ const MonthlyQuest = () => {
                   ...quest,
                   ...getValues().missions[index],
                   imageName: file[0]?.name
-                })
-                trigger(`missions.${index}.image`)
+                });
+                trigger(`missions.${index}.image`);
               }}
             />
             <Button
@@ -313,26 +316,27 @@ const MonthlyQuest = () => {
           <span>
             <Button
               onClick={async () => {
-                await trigger(`missions.${index}`)
+                await trigger(`missions.${index}`);
                 if (
                   Object.keys((errors.missions && errors.missions[index]) || {})
                     .length === 0
                 ) {
-                  const { id, ...rest } = getValues().missions[index]
+                  const { id, ...rest } = getValues().missions[index];
                   update(index, {
                     ...getValues().missions[index],
                     statusEdit: false,
                     statusAdd: false
-                  })
+                  });
 
                   const dataPost = {
                     ...rest,
                     image: getValues().missions[index].image[0]
-                  }
-                  const { type, description, image, idTmp } = dataPost
+                  };
+                  const { type, description, image, idTmp } = dataPost;
                   !rest.statusAdd &&
-                    mutateAsync({ type, description, image, id: idTmp })
-                  rest.statusAdd && mutateAddAsync({ type, description, image })
+                    mutateAsync({ type, description, image, id: idTmp });
+                  rest.statusAdd &&
+                    mutateAddAsync({ type, description, image });
                 }
               }}
               sx={{
@@ -356,8 +360,8 @@ const MonthlyQuest = () => {
           </span>
         </div>
       </>
-    )
-  }
+    );
+  };
 
   // const [count, setCount] = useState(5)
   // useEffect(() => {
@@ -395,7 +399,7 @@ const MonthlyQuest = () => {
                     ? editQuest(quest, index)
                     : viewQuest(quest, index)}
                 </div>
-              )
+              );
             })}
         </div>
       </form>
@@ -412,6 +416,6 @@ const MonthlyQuest = () => {
         </Button>
       </div>
     </div>
-  )
-}
-export default MonthlyQuest
+  );
+};
+export default MonthlyQuest;
