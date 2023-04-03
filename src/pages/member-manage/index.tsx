@@ -39,7 +39,8 @@ const MemberManages = () => {
   // useQuery in order to cache data
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ['member-manage', paramUrl],
-    queryFn: getMemberList
+    queryFn: getMemberList,
+    refetchOnWindowFocus: false
   })
 
   const optionSearch = [
