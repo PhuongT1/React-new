@@ -1,7 +1,8 @@
 import React from 'react'
-import { Navigate, useRoutes } from 'react-router-dom'
-import routeAdmin from './admin'
+import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import routeDefault from './admin'
 import RequireAuth from './requireAuth'
+import routeNftManage from './nft-manage'
 
 const Login = React.lazy(() => import('../account/auth/login'))
 const Routes = () => {
@@ -17,7 +18,18 @@ const Routes = () => {
     {
       path: '/admin',
       element: <RequireAuth />,
-      children: routeAdmin
+      children: routeDefault
+    },
+    {
+      path: '/admin',
+      element: <RequireAuth>{true}</RequireAuth>,
+      children: [
+        {
+          path: 'nft-manage',
+          element: <Outlet />,
+          children: routeNftManage
+        }
+      ]
     }
   ])
   return routes
