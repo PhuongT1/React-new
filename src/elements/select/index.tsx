@@ -1,21 +1,40 @@
-import React from 'react'
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'
-import { Controller } from 'react-hook-form'
+import {
+  Control,
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  Path,
+  UseControllerProps,
+  UseFormRegister
+} from 'react-hook-form'
 import styles from './select.module.scss'
 import { OptionDropdow } from 'models/common.type'
 
-interface SelectProps<T, K> {
-  name: string
-  control: any
+interface SelectProps<
+  T,
+  K,
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+> extends UseControllerProps<TFieldValues, TName> {
   width?: string
-  register: any
+  register: UseFormRegister<TFieldValues>
   size?: 'small' | 'medium'
   label?: string
   option: OptionDropdow[]
   menuItem?: (item: T) => JSX.Element
   menuItem2?: (item: T, value: K) => void
 }
-const Selects = <T, K>(props: SelectProps<T, K>) => {
+
+const Selects = <
+  T,
+  K,
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+>(
+  props: SelectProps<T, K, TFieldValues, TName>
+) => {
   const {
     name,
     control,
@@ -43,12 +62,10 @@ const Selects = <T, K>(props: SelectProps<T, K>) => {
         >
           <InputLabel id={name}>{label}</InputLabel>
           <Select
-            onChange={(e) => {
-              if (onChange) {
-                onChange(e)
-              }
-            }}
             {...register(name)}
+            onChange={(e) => {
+              onChange && onChange(e)
+            }}
             labelId={name}
             id={name}
             value={value}

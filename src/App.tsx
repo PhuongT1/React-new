@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import './App.scss';
-import Routes from './routes';
+import { Suspense } from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import './App.scss'
+import Routes from './routes'
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <Routes />
       </Suspense>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -1,17 +1,17 @@
-import { Outlet } from "react-router-dom"
-import routeMember from "./member-manage"
-import routeNftManage from "./nft-manage"
+import { Outlet } from 'react-router-dom'
+import routeMember from './member-manage'
+import routeNftManage from './nft-manage'
 
-const routeAdmin = [
+const routeDefault = [
   {
-    path: "member-manage",
+    path: 'member-manage',
     element: <Outlet />,
     children: routeMember
   },
   {
-    path: "nft-manage",
+    path: 'nft-manage',
     element: <Outlet />,
     children: routeNftManage
   }
 ]
-export default routeAdmin
+export default routeDefault

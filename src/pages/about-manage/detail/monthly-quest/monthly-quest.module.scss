@@ -1,0 +1,23 @@
+.row-monthly {
+  position: relative;
+  .table-content {
+    border-right: 1px solid rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+    .row-content {
+      display: flex;
+      > span {
+        width: 20%;
+        padding: 10px;
+        border-top: 1px solid rgba(0, 0, 0, 0.4);
+        border-left: 1px solid rgba(0, 0, 0, 0.4);
+        word-break: break-all;
+      }
+    }
+  }
+  .row-button-add {
+    text-align: center;
+    button {
+      margin-top: 15px;
+    }
+  }
+}
