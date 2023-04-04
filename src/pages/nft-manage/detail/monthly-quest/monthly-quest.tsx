@@ -219,7 +219,9 @@ const MonthlyQuest = () => {
           <span>
             <Button
               onClick={() => {
-                update(index, { ...quest, statusEdit: true });
+                setValue(`missions.${index}.statusEdit`, true);
+                console.log('getValues', getValues());
+                // update(index, { ...quest, statusEdit: true });
               }}
               sx={{
                 textTransform: 'none',
@@ -244,7 +246,9 @@ const MonthlyQuest = () => {
       </>
     );
   };
+
   console.log('errors', errors);
+
   const editQuest = (quest: Mission, index: number) => {
     return (
       <>
@@ -303,7 +307,7 @@ const MonthlyQuest = () => {
               }}
             />
             <Button
-              onClick={() => inputFiles.current[index].click()}
+              onClick={() => inputFiles.current.index.click()}
               sx={{
                 textTransform: 'none',
                 background: '#3f51b5'
@@ -323,14 +327,14 @@ const MonthlyQuest = () => {
                 ) {
                   const { id, ...rest } = getValues().missions[index];
                   update(index, {
-                    ...getValues().missions[index],
+                    ...getValues(`missions.${index}`),
                     statusEdit: false,
                     statusAdd: false
                   });
 
                   const dataPost = {
                     ...rest,
-                    image: getValues().missions[index].image[0]
+                    image: getValues(`missions.${index}.image.0`)
                   };
                   const { type, description, image, idTmp } = dataPost;
                   !rest.statusAdd &&
@@ -362,16 +366,6 @@ const MonthlyQuest = () => {
       </>
     );
   };
-
-  // const [count, setCount] = useState(5)
-  // useEffect(() => {
-  //   const counter = setTimeout(() => {
-  //     return setCount((pre) => {
-  //       if (pre == 1) clearInterval(counter)
-  //       return pre - 1
-  //     })
-  //   }, 1000)
-  // }, [count])
 
   return (
     <div className={`${style['row-monthly']}`}>
