@@ -14,6 +14,7 @@ import {
   UseFormRegister
 } from 'react-hook-form';
 import styles from './input.module.scss';
+
 export interface InputElementProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>
