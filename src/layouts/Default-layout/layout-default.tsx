@@ -1,8 +1,8 @@
-import styles from './home.module.scss'
-import { connect } from 'react-redux'
-import Header from './header'
-import Sidebar from './sidebar'
-import { Outlet } from 'react-router-dom'
+import styles from './home.module.scss';
+import { connect } from 'react-redux';
+import Header from '../Header';
+import Sidebar from '../sidebar';
+import { Outlet } from 'react-router-dom';
 
 const LayoutDefault = ({ children }: any) => {
   return (
@@ -17,13 +17,13 @@ const LayoutDefault = ({ children }: any) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: { token: any }) => {
   return {
     tokenRedux: state.token
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps)(LayoutDefault)
+export default connect(mapStateToProps)(LayoutDefault);

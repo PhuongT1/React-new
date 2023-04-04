@@ -1,27 +1,27 @@
-import style from './search.module.scss'
-import { connect } from 'react-redux'
-import Button from '@mui/material/Button'
-import DatePickers from 'elements/datePicker'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
-import Select from '../select'
-import Inputs from '../Input'
-import { MenuItem } from '@mui/material'
-import moment from 'moment'
-import { searchForm } from 'models/search.type'
-import { OptionDropdow } from 'models/common.type'
+import style from './search.module.scss';
+import { connect } from 'react-redux';
+import Button from '@mui/material/Button';
+import DatePickers from 'elements/DatePicker';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import Select from '../Select';
+import Inputs from '../Input';
+import { MenuItem } from '@mui/material';
+import moment from 'moment';
+import { searchForm } from 'models/search.type';
+import { OptionDropdow } from 'models/common.type';
 
 // Model of search props
 export interface Search {
-  defaultSelect: string
-  optionSelect: any[]
-  emitDataSearch: (value: searchForm) => void
-  children?: React.ReactNode
+  defaultSelect: string;
+  optionSelect: any[];
+  emitDataSearch: (value: searchForm) => void;
+  children?: React.ReactNode;
 }
 
 const Search = (props: Search) => {
-  const { defaultSelect, optionSelect, emitDataSearch, children } = props
+  const { defaultSelect, optionSelect, emitDataSearch, children } = props;
   const schema = yup.object().shape({
     startDay: yup
       .date()
@@ -33,20 +33,20 @@ const Search = (props: Search) => {
       .test('endDay', 'End day less start day', (value?: Date) =>
         dayValidator(value)
       )
-  })
+  });
 
   const dayValidator = (value?: Date): boolean => {
-    if (!getValues().startDay || !getValues().endDay) return true
-    const start = moment(getValues().startDay?.format('YYYY-MM-DD'))
-    const end = moment(getValues().endDay?.format('YYYY-MM-DD'))
-    const cal = end.diff(start, 'day') > 0
-    console.log('errors', errors)
+    if (!getValues().startDay || !getValues().endDay) return true;
+    const start = moment(getValues().startDay?.format('YYYY-MM-DD'));
+    const end = moment(getValues().endDay?.format('YYYY-MM-DD'));
+    const cal = end.diff(start, 'day') > 0;
+    console.log('errors', errors);
     if (cal) {
-      clearErrors('endDay')
-      clearErrors('startDay')
+      clearErrors('endDay');
+      clearErrors('startDay');
     }
-    return cal ? true : false
-  }
+    return cal ? true : false;
+  };
 
   const form = useForm<searchForm>({
     defaultValues: {
@@ -57,7 +57,7 @@ const Search = (props: Search) => {
     },
     mode: 'onChange',
     resolver: yupResolver(schema)
-  })
+  });
 
   const {
     register,
@@ -66,17 +66,17 @@ const Search = (props: Search) => {
     formState: { errors },
     clearErrors,
     getValues
-  } = form
+  } = form;
 
   const menuItem = (item: OptionDropdow): JSX.Element => {
     return (
       <>
         <MenuItem value={item.value}>{item.label}</MenuItem>
       </>
-    )
-  }
+    );
+  };
 
-  const menuItem2 = (item: OptionDropdow, item2: string) => {}
+  const menuItem2 = (item: OptionDropdow, item2: string) => {};
   return (
     <div className={style['layer-item']}>
       <form>
@@ -135,12 +135,12 @@ const Search = (props: Search) => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
     state: state
-  }
-}
-export default connect(mapStateToProps)(Search)
+  };
+};
+export default connect(mapStateToProps)(Search);

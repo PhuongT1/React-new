@@ -9,12 +9,12 @@ import http from 'services/axios';
 import style from './monthly-quest.module.scss';
 import * as yup from 'yup';
 import Inputs from 'elements/Input';
-import Loading from 'elements/loading';
+import Loading from 'elements/Loading';
 import { Page } from 'types/page.types';
 import { Mission, Missions } from 'models/mission.type';
 import { convertName } from 'services/common.service';
 import PreviewImage from 'dialog/preview-image';
-import Select from 'elements/select';
+import Select from 'elements/Select';
 import { OptionDropdow } from 'models/common.type';
 
 const MonthlyQuest = () => {

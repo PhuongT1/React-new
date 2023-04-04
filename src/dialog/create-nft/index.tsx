@@ -1,25 +1,25 @@
-import styleNft from './create-nft.module.scss'
-import MenuItem from '@mui/material/MenuItem'
-import { useRef } from 'react'
-import { Button, Dialog, DialogActions, DialogContent } from '@mui/material'
-import Inputs from 'elements/Input'
-import * as yup from 'yup'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Nft } from 'models/nft.type'
-import Select from 'elements/select'
-import http from 'services/axios'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import Loading from 'elements/loading'
-import { CreateNftProps, ErrorRespond, NftForm } from './create-nft.type'
+import styleNft from './create-nft.module.scss';
+import MenuItem from '@mui/material/MenuItem';
+import { useRef } from 'react';
+import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import Inputs from 'elements/Input';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Nft } from 'models/nft.type';
+import Select from 'elements/Select';
+import http from 'services/axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Loading from 'elements/Loading';
+import { CreateNftProps, ErrorRespond, NftForm } from './create-nft.type';
 
 const CreateNft = (props: CreateNftProps) => {
-  const { onClose, open } = props
+  const { onClose, open } = props;
   const optionType = [
     { value: 'ERC-721', label: 'ERC-721' },
     { value: 'ERC-1155', label: 'ERC-1155' }
-  ]
-  const imageRef = useRef<HTMLInputElement | null>(null) // set ref
+  ];
+  const imageRef = useRef<HTMLInputElement | null>(null); // set ref
 
   // Validate form with yub
   const schema = yup.object().shape({
@@ -29,21 +29,21 @@ const CreateNft = (props: CreateNftProps) => {
     image: yup
       .mixed()
       .test('required', 'photo is required', (value) => {
-        console.log('hehe required', value)
-        if (!value) return false
-        return true
+        console.log('hehe required', value);
+        if (!value) return false;
+        return true;
       })
       .test('fileType', 'Unsupported File Format', (value) => {
-        const file = value as FileList
-        if (!file) return true
-        return ['image/jpeg', 'image/png', 'image/jpg'].includes(file[0]?.type)
+        const file = value as FileList;
+        if (!file) return true;
+        return ['image/jpeg', 'image/png', 'image/jpg'].includes(file[0]?.type);
       })
       .test('fileSize', 'File Size is too large', (value) => {
-        const file = value as FileList
-        if (!file) return true
-        return file[0]?.size <= 5242880
+        const file = value as FileList;
+        if (!file) return true;
+        return file[0]?.size <= 5242880;
       })
-  })
+  });
 
   const form = useForm<Nft>({
     defaultValues: {
@@ -56,7 +56,7 @@ const CreateNft = (props: CreateNftProps) => {
     },
     mode: 'onTouched',
     resolver: yupResolver(schema)
-  })
+  });
 
   const {
     register,
@@ -68,17 +68,17 @@ const CreateNft = (props: CreateNftProps) => {
     getValues,
     setError,
     reset
-  } = form
+  } = form;
 
   // set ref Image
-  const { ref, onChange, ...rest } = register('image')
+  const { ref, onChange, ...rest } = register('image');
 
   // Subtmit formdata
   const onSubmit = (data: FormData) => {
-    return http.post(`admin/nft`, data) // return promise
-  }
+    return http.post(`admin/nft`, data); // return promise
+  };
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const { isLoading: loadingItem, mutate } = useMutation(onSubmit, {
     onSuccess: async () => {
       await queryClient.invalidateQueries([
@@ -88,14 +88,14 @@ const CreateNft = (props: CreateNftProps) => {
           page: 1,
           order_by: `desc`
         }
-      ])
-      onClose()
+      ]);
+      onClose();
     },
     onError: (error: ErrorRespond) => {
       error.message.name === 'name' &&
-        setError('name', { message: error.message.name[0] })
+        setError('name', { message: error.message.name[0] });
     }
-  })
+  });
 
   // Render option of select
   // const menuItem = (item: OptionDropdow): JSX.Element => {
@@ -107,18 +107,18 @@ const CreateNft = (props: CreateNftProps) => {
   // }
 
   const setDataForm = (dataForm: Nft) => {
-    const formData: FormData = new FormData()
+    const formData: FormData = new FormData();
     const { name, contract_address, token_standard, block_chain, image } =
-      dataForm
-    formData.append('name', name)
-    formData.append('contract_address', contract_address)
-    formData.append('token_standard', token_standard)
-    formData.append('block_chain', block_chain)
-    formData.append('image', image[0])
+      dataForm;
+    formData.append('name', name);
+    formData.append('contract_address', contract_address);
+    formData.append('token_standard', token_standard);
+    formData.append('block_chain', block_chain);
+    formData.append('image', image[0]);
 
     // submit data to form
-    mutate(formData)
-  }
+    mutate(formData);
+  };
 
   return (
     <Dialog fullWidth={true} maxWidth={'sm'} open={open}>
@@ -175,16 +175,16 @@ const CreateNft = (props: CreateNftProps) => {
                 className={styleNft.hidden}
                 {...rest}
                 ref={(e) => {
-                  ref(e)
-                  imageRef.current = e
+                  ref(e);
+                  imageRef.current = e;
                 }}
                 type="file"
                 name="image"
                 onChange={(e) => {
-                  onChange(e)
-                  const file = getValues().image[0] as File
-                  setValue('imageName', file && file.name)
-                  trigger('image')
+                  onChange(e);
+                  const file = getValues().image[0] as File;
+                  setValue('imageName', file && file.name);
+                  trigger('image');
                 }}
               />
               <Inputs
@@ -204,7 +204,7 @@ const CreateNft = (props: CreateNftProps) => {
                 variant="contained"
                 autoFocus
                 onClick={() => {
-                  imageRef?.current?.click()
+                  imageRef?.current?.click();
                 }}
               >
                 Upload
@@ -216,8 +216,8 @@ const CreateNft = (props: CreateNftProps) => {
           <Button
             autoFocus
             onClick={() => {
-              onClose()
-              reset()
+              onClose();
+              reset();
             }}
           >
             Cancel
@@ -226,7 +226,7 @@ const CreateNft = (props: CreateNftProps) => {
             type="submit"
             autoFocus
             onClick={async () => {
-              await trigger()
+              await trigger();
             }}
           >
             Complete
@@ -234,7 +234,7 @@ const CreateNft = (props: CreateNftProps) => {
         </DialogActions>
       </form>
     </Dialog>
-  )
-}
+  );
+};
 
-export default CreateNft
+export default CreateNft;

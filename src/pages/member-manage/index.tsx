@@ -1,56 +1,56 @@
-import styleLogin from './member-manage.module.scss'
-import http from 'services/axios'
-import { useState } from 'react'
-import SearchItem from 'elements/search'
-import TableData from 'elements/table'
-import Button from '@mui/material/Button'
-import Paginations from 'elements/pagination'
-import { Page } from 'types/page.types'
-import { Member, SearchMember } from './member-manage.type'
-import moment from 'moment'
-import { TableCell } from '@mui/material'
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { searchForm } from 'models/search.type'
-const Loading = React.lazy(() => import('elements/loading'))
+import styleLogin from './member-manage.module.scss';
+import http from 'services/axios';
+import { useState } from 'react';
+import SearchItem from 'elements/Search';
+import TableData from 'elements/Table';
+import Button from '@mui/material/Button';
+import Paginations from 'elements/Pagination';
+import { Page } from 'types/page.types';
+import { Member, SearchMember } from './member-manage.type';
+import moment from 'moment';
+import { TableCell } from '@mui/material';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { searchForm } from 'models/search.type';
+const Loading = React.lazy(() => import('elements/Loading'));
 
 const MemberManages = () => {
   // API Get list data
   const getMemberList = async ({
     queryKey
   }: {
-    queryKey: [string, SearchMember]
+    queryKey: [string, SearchMember];
   }) => {
-    const [, param] = queryKey
+    const [, param] = queryKey;
     const response = await http.get<Page<Member>>(`/admin/users`, {
       params: param
-    })
-    return response.data
-  }
+    });
+    return response.data;
+  };
 
   // Param url
   const [paramUrl, setParamUrl] = useState<SearchMember>({
     per_page: 5,
     page: 1,
     order_by: 'id desc'
-  })
+  });
 
   // useQuery in order to cache data
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ['member-manage', paramUrl],
     queryFn: getMemberList,
     refetchOnWindowFocus: false
-  })
+  });
 
   const optionSearch = [
     { value: 'search_like', label: 'Search Like' },
     { value: 'name_like', label: 'Name Like' },
     { value: 'id_eq', label: 'Id Like' }
-  ]
+  ];
 
   if (isError) {
-    console.log(error) // log error if get data has error
+    console.log(error); // log error if get data has error
   }
 
   const rowheader: string[] = [
@@ -60,7 +60,7 @@ const MemberManages = () => {
     'Date Create',
     'Status',
     'More information'
-  ]
+  ];
 
   // Render UI for row table
   const rowTable = (item: Member, _index?: number) => {
@@ -97,24 +97,24 @@ const MemberManages = () => {
           </Button>
         </TableCell>
       </>
-    )
-  }
+    );
+  };
 
   const searchData = (data: searchForm) => {
-    if (!data) return
-    let dataSearch = {} as SearchMember
+    if (!data) return;
+    let dataSearch = {} as SearchMember;
     dataSearch['created_at_btw'] = `${
       data.startDay ? data.startDay?.format('DD-MM-YYYY') : ''
-    }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`
-    dataSearch[data.order_by as keyof searchForm] = data.search_like
-    setParamUrl({ ...paramUrl, ...dataSearch })
-  }
+    }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`;
+    dataSearch[data.order_by as keyof searchForm] = data.search_like;
+    setParamUrl({ ...paramUrl, ...dataSearch });
+  };
 
   // Patinate for pages
   const emitPage = (page: number) => {
-    const paramUrls = { ...paramUrl, page }
-    setParamUrl(paramUrls)
-  }
+    const paramUrls = { ...paramUrl, page };
+    setParamUrl(paramUrls);
+  };
 
   // render UI for Member manage
   return (
@@ -141,6 +141,6 @@ const MemberManages = () => {
         </div>
       </div>
     </div>
-  )
-}
-export default MemberManages
+  );
+};
+export default MemberManages;

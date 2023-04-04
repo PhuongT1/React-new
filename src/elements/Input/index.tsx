@@ -1,34 +1,32 @@
-import React from 'react'
+import React from 'react';
 import {
   FormControl,
   InputLabel,
   FilledInput,
   FormHelperText,
   InputBaseProps
-} from '@mui/material'
+} from '@mui/material';
 import {
-  Control,
   Controller,
   FieldPath,
   FieldValues,
+  UseControllerProps,
   UseFormRegister
-} from 'react-hook-form'
-import styles from './input.module.scss'
+} from 'react-hook-form';
+import styles from './input.module.scss';
 export interface InputElementProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>
-> extends InputBaseProps {
-  label?: string
-  height?: string
-  width?: string
-  customStyle?: string
-  containerStyle?: string
-  radius?: string
-  helperText?: React.ReactNode
-  control: Control<TFieldValues>
-  register: UseFormRegister<TFieldValues>
-  name: TName
-  onChangeHandle?: (value: any) => void
+> extends Omit<InputBaseProps, 'defaultValue' | 'name'>,
+    UseControllerProps<TFieldValues, TName> {
+  label?: string;
+  height?: string;
+  width?: string;
+  customStyle?: string;
+  radius?: string;
+  helperText?: React.ReactNode;
+  register: UseFormRegister<TFieldValues>;
+  onChangeHandle?: (value: any) => void;
 }
 
 const Inputs = <
@@ -36,7 +34,6 @@ const Inputs = <
   TName extends FieldPath<TFieldValues>
 >({
   label,
-  name,
   control,
   startAdornment,
   endAdornment,
@@ -56,6 +53,7 @@ const Inputs = <
   hidden,
   readOnly,
   onChangeHandle,
+  name,
   sx
 }: InputElementProps<TFieldValues, TName>) => {
   return (
@@ -104,9 +102,9 @@ const Inputs = <
             onChange={({
               target: { value, files }
             }: React.ChangeEvent<HTMLInputElement>) => {
-              const valInput = type === 'file' ? files : value
-              onChange(valInput)
-              onChangeHandle && onChangeHandle(valInput) // emit a function onChange
+              const valInput = type === 'file' ? files : value;
+              onChange(valInput);
+              onChangeHandle && onChangeHandle(valInput); // emit a function onChange
             }}
             type={type}
             sx={{ height: height, borderRadius: radius }}
@@ -118,7 +116,7 @@ const Inputs = <
         </FormControl>
       )}
     />
-  )
-}
+  );
+};
 
-export default Inputs
+export default Inputs;

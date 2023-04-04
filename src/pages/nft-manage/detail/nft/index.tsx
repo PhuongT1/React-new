@@ -1,64 +1,64 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, MenuItem } from '@mui/material'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Nft } from 'models/nft.type'
-import { useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
-import http from 'services/axios'
-import style from './nft.module.scss'
-import * as yup from 'yup'
-import Inputs from 'elements/Input'
-import Select from 'elements/select'
-import Loading from 'elements/loading'
-import { convertName } from 'services/common.service'
-import PreviewImage from 'dialog/preview-image'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, MenuItem } from '@mui/material';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Nft } from 'models/nft.type';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
+import http from 'services/axios';
+import style from './nft.module.scss';
+import * as yup from 'yup';
+import Inputs from 'elements/Input';
+import Select from 'elements/Select';
+import Loading from 'elements/Loading';
+import { convertName } from 'services/common.service';
+import PreviewImage from 'dialog/preview-image';
 
 const NftDetail = () => {
-  const { id } = useParams()
-  const inputUpload = useRef<HTMLInputElement>(null)
-  const [openModal, setOpenModal] = useState<boolean>(false)
-  const [isStatusEdit, setStatusEdit] = useState<boolean>(() => false)
+  const { id } = useParams();
+  const inputUpload = useRef<HTMLInputElement>(null);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isStatusEdit, setStatusEdit] = useState<boolean>(() => false);
   const optionSearch = [
     { value: 'ERC-721', label: 'ERC-721' },
     { value: 'ERC-1155', label: 'ERC-1155' }
-  ]
+  ];
 
   const getList = async ({ queryKey }: { queryKey: [string, number] }) => {
-    const [_, id] = queryKey
-    const response = await http.get(`/admin/nft/${id}`)
-    return response.data as Nft
-  }
+    const [_, id] = queryKey;
+    const response = await http.get(`/admin/nft/${id}`);
+    return response.data as Nft;
+  };
 
   const updateNft = async (dataForm: FormData) => {
-    const response = await http.post<Nft>(`/admin/nft/${id}`, dataForm)
-    return response.data
-  }
+    const response = await http.post<Nft>(`/admin/nft/${id}`, dataForm);
+    return response.data;
+  };
 
   // useQuery in order to cache data
   const { data, isLoading } = useQuery(['nft-detail', Number(id)], getList, {
     refetchOnWindowFocus: false
-  })
+  });
 
   // useMutation in order to cache data and post data to server
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const {
     data: dataEdit,
     isLoading: isLoadingEdit,
     error: errorUpdate,
     mutate
-  } = useMutation(updateNft)
+  } = useMutation(updateNft);
 
   useEffect(() => {
     if (dataEdit) {
-      queryClient.setQueryData(['nft-detail', Number(id)], dataEdit)
-      setStatusEdit(false)
+      queryClient.setQueryData(['nft-detail', Number(id)], dataEdit);
+      setStatusEdit(false);
     }
     if (data) {
-      setData(data)
+      setData(data);
     }
-  }, [dataEdit, data])
+  }, [dataEdit, data]);
 
   // validate form with yub
   const schema = yup.object().shape({
@@ -69,20 +69,20 @@ const NftDetail = () => {
       .mixed()
       .nullable()
       .test('fileSize', 'File Size is too large', (value) => {
-        const val = value as FileList
+        const val = value as FileList;
         if (!val.length) {
-          return true
+          return true;
         }
-        return val[0].size < 5242880 ? true : false
+        return val[0].size < 5242880 ? true : false;
       })
       .test('fileType', 'Unsupported File Format', (value) => {
-        const val = value as FileList
+        const val = value as FileList;
         if (!val?.length) {
-          return true
+          return true;
         }
-        return ['image/jpeg', 'image/png', 'image/jpg'].includes(val[0]?.type)
+        return ['image/jpeg', 'image/png', 'image/jpg'].includes(val[0]?.type);
       })
-  })
+  });
 
   const form = useForm<Nft>({
     defaultValues: {
@@ -96,7 +96,7 @@ const NftDetail = () => {
     },
     mode: 'onTouched',
     resolver: yupResolver(schema)
-  })
+  });
 
   const {
     register,
@@ -106,25 +106,25 @@ const NftDetail = () => {
     handleSubmit,
     formState: { errors },
     setError
-  } = form
+  } = form;
 
   // Set data for form
   const setData = (data: Nft) => {
-    setValue('id', data.id)
-    setValue('name', data.name)
-    setValue('contract_address', data.contract_address)
-    setValue('block_chain', data.block_chain)
-    setValue('imageName', convertName(data.image))
-    setValue('token_standard', data.token_standard)
-  }
+    setValue('id', data.id);
+    setValue('name', data.name);
+    setValue('contract_address', data.contract_address);
+    setValue('block_chain', data.block_chain);
+    setValue('imageName', convertName(data.image));
+    setValue('token_standard', data.token_standard);
+  };
 
   // set Error from BE
   useEffect(() => {
     if (errorUpdate) {
-      const error: any = errorUpdate
-      setError('name', { message: error.message.name[0] })
+      const error: any = errorUpdate;
+      setError('name', { message: error.message.name[0] });
     }
-  }, [errorUpdate])
+  }, [errorUpdate]);
 
   // Render option of select
   const menuItem = (item?: any, index?: number): JSX.Element => {
@@ -132,22 +132,22 @@ const NftDetail = () => {
       <>
         <MenuItem value={item.value}>{item.label}</MenuItem>
       </>
-    )
-  }
+    );
+  };
 
   // Submit form data
   const submitData = (data: Nft) => {
-    const formData: FormData = new FormData()
+    const formData: FormData = new FormData();
 
     Object.keys(data).map((key: string) => {
       if (key !== 'image') {
-        data[key as keyof Nft] && formData.append(key, data[key as keyof Nft])
+        data[key as keyof Nft] && formData.append(key, data[key as keyof Nft]);
       } else {
-        data[key]?.length && formData.append(key, data[key][0])
+        data[key]?.length && formData.append(key, data[key][0]);
       }
-    })
-    mutate(formData)
-  }
+    });
+    mutate(formData);
+  };
 
   const viewNft = () => {
     return (
@@ -157,7 +157,7 @@ const NftDetail = () => {
             sx={{ textTransform: 'none', background: '#3f51b5' }}
             variant="contained"
             onClick={() => {
-              setStatusEdit(!isStatusEdit)
+              setStatusEdit(!isStatusEdit);
             }}
           >
             Edit
@@ -209,8 +209,8 @@ const NftDetail = () => {
           </div>
         </div>
       </>
-    )
-  }
+    );
+  };
 
   const editNftForm = () => {
     return (
@@ -286,8 +286,8 @@ const NftDetail = () => {
                 hidden
                 control={control}
                 onChangeHandle={(file: FileList) => {
-                  setValue('imageName', file[0]?.name)
-                  trigger('image')
+                  setValue('imageName', file[0]?.name);
+                  trigger('image');
                 }}
               />
               <Inputs
@@ -301,7 +301,7 @@ const NftDetail = () => {
               />
               <Button
                 onClick={() => {
-                  inputUpload.current && inputUpload.current.click()
+                  inputUpload.current && inputUpload.current.click();
                 }}
                 sx={{
                   textTransform: 'none',
@@ -316,8 +316,8 @@ const NftDetail = () => {
           </div>
         </div>
       </form>
-    )
-  }
+    );
+  };
 
   return (
     <div className={`${style['row-nft']}`}>
@@ -330,6 +330,6 @@ const NftDetail = () => {
       {!isStatusEdit && viewNft()}
       {isStatusEdit && editNftForm()}
     </div>
-  )
-}
-export default NftDetail
+  );
+};
+export default NftDetail;

@@ -1,86 +1,86 @@
-import styleLogin from './member-manage.module.scss'
-import http from '../../services/axios'
-import { useEffect, useState } from 'react'
-import SearchItem from 'elements/search'
-import TableData from 'elements/table'
-import Button from '@mui/material/Button'
-import Paginations from 'elements/pagination'
-import { Page } from '../../types/page.types'
-import { TableCell } from '@mui/material'
-import { NavLink } from 'react-router-dom'
-import Loading from 'elements/loading'
-import CreateNft from 'dialog/create-nft'
-import { useQuery } from '@tanstack/react-query'
-import { searchForm } from 'models/search.type'
-import { Nft } from 'models/nft.type'
-import { NftSearchItem } from './member-manage.type'
+import styleLogin from './member-manage.module.scss';
+import http from '../../services/axios';
+import { useEffect, useState } from 'react';
+import SearchItem from 'elements/Search';
+import TableData from 'elements/Table';
+import Button from '@mui/material/Button';
+import Paginations from 'elements/Pagination';
+import { Page } from '../../types/page.types';
+import { TableCell } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+import Loading from 'elements/Loading';
+import CreateNft from 'dialog/create-nft';
+import { useQuery } from '@tanstack/react-query';
+import { searchForm } from 'models/search.type';
+import { Nft } from 'models/nft.type';
+import { NftSearchItem } from './member-manage.type';
 
 const NftManage = () => {
   const getNftList = async ({
     queryKey
   }: {
-    queryKey: [string, NftSearchItem]
+    queryKey: [string, NftSearchItem];
   }) => {
-    const [, param] = queryKey
+    const [, param] = queryKey;
     const response = await http.get<Page<Nft>>(`/admin/nfts`, {
       params: param
-    })
+    });
     return {
       data: response.data.data,
       meta: {
         last_page: response.data.last_page
       }
-    }
-  }
+    };
+  };
 
   const [paramUrl, setParamUrl] = useState<NftSearchItem>({
     per_page: 15,
     page: 1,
     order_by: `desc`
-  })
+  });
 
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ['nft-manage', paramUrl],
     queryFn: getNftList,
     refetchOnWindowFocus: false
-  })
+  });
 
   if (isError) {
-    console.log(error)
+    console.log(error);
   }
 
   // Set state for open (modal)
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const handlOpenModal = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = (value?: string) => {
-    setOpen(false)
-    console.log('handleClose', value)
-  }
+    setOpen(false);
+    console.log('handleClose', value);
+  };
 
   const optionSearch = [
     { value: 'search_like', label: 'Search Like' },
     { value: 'name_like', label: 'Name Like' },
     { value: 'id_eq', label: 'Id Like' }
-  ]
+  ];
 
   const searchData = (data: searchForm) => {
-    if (!data) return
-    let dataSearch = {} as NftSearchItem
+    if (!data) return;
+    let dataSearch = {} as NftSearchItem;
     dataSearch['created_at_btw'] = `${
       data.startDay ? data.startDay.format('DD-MM-YYYY') : ''
-    }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`
-    dataSearch[data.order_by as keyof searchForm] = data.search_like
-    setParamUrl({ ...paramUrl, ...dataSearch })
-  }
+    }${data.endDay ? `, ${data.endDay.format('DD-MM-YYYY')} 23:59:59` : ''}`;
+    dataSearch[data.order_by as keyof searchForm] = data.search_like;
+    setParamUrl({ ...paramUrl, ...dataSearch });
+  };
 
   const emitPage = (page: number) => {
-    console.log('page', page)
-    setParamUrl({ ...paramUrl, ...{ page: page } })
-  }
+    console.log('page', page);
+    setParamUrl({ ...paramUrl, ...{ page: page } });
+  };
 
   const rowheader: string[] = [
     'STT',
@@ -90,7 +90,7 @@ const NftManage = () => {
     'Blockchain',
     'Token standard',
     'More information'
-  ]
+  ];
 
   const rowTable = (item: Nft, index: number): JSX.Element => {
     return (
@@ -119,12 +119,12 @@ const NftManage = () => {
           </Button>
         </TableCell>
       </>
-    )
-  }
+    );
+  };
 
   useEffect(() => {
-    console.log('useEffect')
-  })
+    console.log('useEffect');
+  });
 
   // Render UI
   return (
@@ -165,6 +165,6 @@ const NftManage = () => {
         </div>
       </div>
     </div>
-  )
-}
-export default NftManage
+  );
+};
+export default NftManage;
